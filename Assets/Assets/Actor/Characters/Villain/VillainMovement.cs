@@ -8,7 +8,7 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
     public Transform MovePoint;
     public LayerMask Wall;
     public LayerMask Death;
-    public LayerMask Oneway;
+    public ChangeTile changeTileScript; 
 
     public Animator animator;
 
@@ -22,8 +22,16 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
     // Update is called once per frame
     void Update()
     {
+        // If hero dead, don't do anything - or if an event is happening
+        if(GameStateManager.Instance.EventOccurance)
+        {
+            MovePoint.position = transform.position;
+            animator.SetBool("isMoving", false);
+            return;
+        }
+
         // Check if space is free, move on if so
-        if (GameStateManager.Instance.HeroMoving > 0 || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
+        if (GameStateManager.Instance.VillainMoving > 0 || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
         {
             transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
             animator.SetBool("isMoving", true);
@@ -40,14 +48,14 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
         else if (MovePoint.position.x < transform.position.x) animator.SetInteger("direction", 1);
 
         // Check if instance is done moving
-        if(transform.position == MovePoint.position)
+        if(transform.position == MovePoint.position && GameStateManager.Instance.VillainMoving > 0)
         {
             GameStateManager.Instance.VillainMoving = 0;
 
             // Check if on top of oneway
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Oneway")))
             {
-                GameObject obj = Physics2D.OverlapPoint(transform.position, Oneway).gameObject;
+                GameObject obj = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Oneway")).gameObject;
                 switch(obj.name)
                 {
                     case "Oneway_down":
@@ -68,12 +76,28 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
                         break;
                 }
             }
-        }
+            
+            // Check if on top of death tile
+            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death))
+            {
+                animator.SetBool("isDead", true);
+                GameStateManager.Instance.EventOccurance = true;
+                GameStateManager.Instance.Clear();
+            }
 
-        // If hero dead, don't do anything - or if an event is happening
-        if(GameStateManager.Instance.EventOccurance)
-        {
-            return;
+            // Check if on top of switch tile
+            if (Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Switch")))
+            {
+                Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position, LayerMask.GetMask("Switch"));
+                foreach (Collider2D collider in colliders)
+                {
+                    changeTileScript = collider.GetComponent<ChangeTile>();
+                    if (changeTileScript != null)
+                    {
+                        changeTileScript.deleteTile(transform.position);
+                    }
+                }
+            }
         }
 
         if(!GameStateManager.Instance.PlayerMoving)
@@ -97,12 +121,6 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
                     GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(this.gameObject, transform.position));
                     MovePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f);
                 }
-            }
-            
-            
-            // Check for death
-            if(Physics2D.OverlapArea(MovePoint.position + new Vector3(-0.16f, -0.16f, 0f), MovePoint.position + new Vector3(0.16f, 0.16f, 0f), Death)) {
-                GameStateManager.Instance.EventOccurance = true;
             }
         }
     }

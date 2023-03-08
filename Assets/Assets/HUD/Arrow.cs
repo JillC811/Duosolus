@@ -8,6 +8,6 @@ public class Arrow : MonoBehaviour
 
     void Update()
     {
-        if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Player_Hero"))) Debug.Log("Well works for me");
+        //if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Player_Hero"))) Debug.Log("Well works for me");
     }
 }

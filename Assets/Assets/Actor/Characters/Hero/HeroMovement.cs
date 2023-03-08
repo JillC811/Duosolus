@@ -5,10 +5,11 @@ using UnityEngine;
 public class HeroMovement : MonoBehaviour, InterfaceUndo
 {
     public float MoveSpeed;
+    public bool isDead = false;
     public Transform MovePoint;
     public LayerMask Wall;
     public LayerMask Death;
-    public LayerMask Oneway;
+    public ChangeTile changeTileScript; 
 
     public Animator animator;
 
@@ -30,24 +31,15 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
         }
         else animator.SetBool("isMoving", false);
 
-        //Animation Purpose
-        if (MovePoint.position.y > transform.position.y)
-            animator.SetInteger("direction", 2);
-        else if (MovePoint.position.y < transform.position.y) animator.SetInteger("direction", 0);
-
-        if (MovePoint.position.x > transform.position.x)
-            animator.SetInteger("direction", 3);
-        else if (MovePoint.position.x < transform.position.x) animator.SetInteger("direction", 1);
-        
         // Check if instance is done moving
-        if(transform.position == MovePoint.position)
+        if(transform.position == MovePoint.position && GameStateManager.Instance.HeroMoving > 0)
         {
             GameStateManager.Instance.HeroMoving = 0;
 
             // Check if on top of oneway
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Oneway")))
             {
-                GameObject obj = Physics2D.OverlapPoint(transform.position, Oneway).gameObject;
+                GameObject obj = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Oneway")).gameObject;
                 switch(obj.name)
                 {
                     case "Oneway_down":
@@ -68,7 +60,41 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                         break;
                 }
             }
+            
+            // Check if on top of death tile
+            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death))
+            {
+                isDead = true;
+                animator.SetBool("isDead", true);
+                GameStateManager.Instance.EventOccurance = true;
+                Debug.Log("Player Pos " + transform.position);
+            }
+
+            // Check if on top of switch tile
+            if (Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Switch")))
+            {
+                Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position, LayerMask.GetMask("Switch"));
+                foreach (Collider2D collider in colliders)
+                {
+                    changeTileScript = collider.GetComponent<ChangeTile>();
+                    if (changeTileScript != null)
+                    {
+                        changeTileScript.deleteTile(transform.position);
+                    }
+                }
+            }
+            
         }
+        
+        //Animation Purpose
+        if (MovePoint.position.y > transform.position.y)
+            animator.SetInteger("direction", 2);
+        else if (MovePoint.position.y < transform.position.y) animator.SetInteger("direction", 0);
+
+        if (MovePoint.position.x > transform.position.x)
+            animator.SetInteger("direction", 3);
+        else if (MovePoint.position.x < transform.position.x) animator.SetInteger("direction", 1);
+        
 
 
         // If hero dead, don't do anything
@@ -99,12 +125,6 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                     MovePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f);
                 }
             }
-            
-            
-            // Check for death
-            if(Physics2D.OverlapArea(MovePoint.position + new Vector3(-0.16f, -0.16f, 0f), MovePoint.position + new Vector3(0.16f, 0.16f, 0f), Death)) {
-                GameStateManager.Instance.EventOccurance = true;
-            }
         }
     }
 
@@ -113,6 +133,13 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     {
         transform.position = coord;
         MovePoint.position = coord;
+
+        if(isDead)
+        {
+            GameStateManager.Instance.EventOccurance = false;
+            animator.SetBool("isDead", false);
+            isDead = false;
+        }
     }
 }
 
