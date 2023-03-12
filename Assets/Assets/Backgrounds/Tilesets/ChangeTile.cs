@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
 
 public class ChangeTile : MonoBehaviour, InterfaceUndo
 {
@@ -13,7 +14,25 @@ public class ChangeTile : MonoBehaviour, InterfaceUndo
     void Start()
     {
         // Switch to wall
-        switchToWall.Add(new Vector3Int(3, -1, 0), new Vector3Int(0, -4, 0));
+        int level = GameStateManager.SceneNameToLevel(SceneManager.GetActiveScene().name);
+        switch(level)
+        {
+            case 0:
+                switchToWall.Add(new Vector3Int(4, -3, 0), new Vector3Int(-2, -3, 0));
+                break;
+            case 1:
+                switchToWall.Add(new Vector3Int(0, -3, 0), new Vector3Int(0, 1, 0));
+                break;
+            case 2:
+                switchToWall.Add(new Vector3Int(4, -2, 0), new Vector3Int(-1, 2, 0));
+                break;
+            case 3:
+                switchToWall.Add(new Vector3Int(0, -1, 0), new Vector3Int(-3, 2, 0));
+                break;
+            case 4:
+                switchToWall.Add(new Vector3Int(3, -1, 0), new Vector3Int(0, -4, 0));
+                break;
+        }
 
         
     }

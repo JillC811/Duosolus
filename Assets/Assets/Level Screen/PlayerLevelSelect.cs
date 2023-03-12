@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 
 public class PlayerLevelSelect : MonoBehaviour
 {
@@ -18,11 +19,30 @@ public class PlayerLevelSelect : MonoBehaviour
     };
     int index;
 
+    public Tilemap tilemap;
+
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = coords[0];
         index = GlobalGameStateManager.Instance.curLevel;
+        transform.position = coords[index];
+
+        // Lock levels that you can't access
+        for(int i = 0; i < coords.Length - 1; i++)
+        {
+            Vector3Int cellPosition; 
+            
+            //First level is always unlocked
+            cellPosition = tilemap.WorldToCell(coords[0]);
+            tilemap.SetTile(cellPosition, null);
+
+            if(GlobalGameStateManager.Instance.clearedLevels[i])
+            {
+                cellPosition = tilemap.WorldToCell(coords[i+1]);
+                tilemap.SetTile(cellPosition, null);
+            }
+        }
+
     }
 
     // Update is called once per frame

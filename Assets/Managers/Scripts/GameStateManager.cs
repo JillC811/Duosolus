@@ -50,7 +50,7 @@ public class GameStateManager : MonoBehaviour
         // Check if players moved, update PlayerMoving variable accordingly
         if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0)
         {
-            PreviousMoves.Push(new History(null, new Vector3(0f,0f,0f)));
+            PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
             PlayerMoving = false;
         }
         else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0))

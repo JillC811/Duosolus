@@ -9,7 +9,9 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     public Transform MovePoint;
     public LayerMask Wall;
     public LayerMask Death;
+    public LayerMask Villain;
     public ChangeTile changeTileScript; 
+    public GameObject deadScreenUI;
 
     public Animator animator;
 
@@ -62,11 +64,13 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             }
             
             // Check if on top of death tile
-            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death))
+            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Player_Villain")))
             {
+                deadScreenUI.SetActive(true);
                 isDead = true;
                 animator.SetBool("isDead", true);
                 GameStateManager.Instance.EventOccurance = true;
+                GameStateManager.Instance.VillainMoving = 0;
                 Debug.Log("Player Pos " + transform.position);
             }
 
@@ -125,6 +129,8 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                     MovePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f);
                 }
             }
+
+            MovePoint.position = new Vector3(Mathf.Round(MovePoint.position.x / 0.08f) * 0.08f, Mathf.Round(MovePoint.position.y / 0.08f) * 0.08f, MovePoint.position.z);
         }
     }
 
@@ -139,6 +145,7 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             GameStateManager.Instance.EventOccurance = false;
             animator.SetBool("isDead", false);
             isDead = false;
+            deadScreenUI.SetActive(false);
         }
     }
 }

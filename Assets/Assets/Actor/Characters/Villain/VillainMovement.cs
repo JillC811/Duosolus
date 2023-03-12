@@ -78,7 +78,7 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
             }
             
             // Check if on top of death tile
-            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death))
+            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) && !GameStateManager.Instance.EventOccurance)
             {
                 animator.SetBool("isDead", true);
                 GameStateManager.Instance.EventOccurance = true;
@@ -122,6 +122,8 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
                     MovePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f);
                 }
             }
+
+            MovePoint.position = new Vector3(Mathf.Round(MovePoint.position.x / 0.08f) * 0.08f, Mathf.Round(MovePoint.position.y / 0.08f) * 0.08f, MovePoint.position.z);
         }
     }
 
