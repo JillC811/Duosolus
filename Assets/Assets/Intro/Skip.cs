@@ -6,15 +6,16 @@ using UnityEngine.SceneManagement;
 public class Skip : MonoBehaviour
 {
     public string LevelName;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float changeTime;
 
     // Update is called once per frame
     void Update()
     {
+        changeTime -= Time.deltaTime;
+        if(changeTime <= 0)
+        {
+            SceneManager.LoadScene(LevelName);
+        }
         if(Input.GetKeyDown(KeyCode.Space)){
             SceneManager.LoadScene(LevelName);
         }
