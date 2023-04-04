@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VillainMovement : MonoBehaviour, InterfaceUndo
+public class CloneVillainMovement : MonoBehaviour, InterfaceUndo
 {
     public float MoveSpeed;
     public Transform MovePoint;
@@ -11,12 +11,10 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
     public ChangeTile changeTileScript;
     public Vector3 orangePosition;
     public Vector3 bluePosition;
-    public GameObject duplicationDestination; 
-    public GameObject duplicate; 
     public GameObject timedDoor;
     private float timer = 2f;
     private bool isOpen = false;
-
+    
     public Animator animator;
 
     // Start is called before the first frame update
@@ -38,7 +36,7 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
         }
 
         // Check if space is free, move on if so
-        if (GameStateManager.Instance.VillainMoving > 0 || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
+        if (GameStateManager.Instance.VillainCloneMoving > 0 || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
         {
             transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
             animator.SetBool("isMoving", true);
@@ -55,9 +53,9 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
         else if (MovePoint.position.x < transform.position.x) animator.SetInteger("direction", 1);
 
         // Check if instance is done moving
-        if(transform.position == MovePoint.position && GameStateManager.Instance.VillainMoving > 0)
+        if(transform.position == MovePoint.position && GameStateManager.Instance.VillainCloneMoving > 0)
         {
-            GameStateManager.Instance.VillainMoving = 0;
+            GameStateManager.Instance.VillainCloneMoving = 0;
 
             // Check if on top of oneway
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Oneway")))
@@ -123,16 +121,6 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
                 }
             }
 
-            // Check if on top of a duplicator
-            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Duplicator")))
-            {
-                GameObject obj = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Duplicator")).gameObject;
-                GameStateManager.Instance.villainDuplicateActive = true;
-                duplicate.SetActive(true);
-                obj.SetActive(false);
-                duplicationDestination.SetActive(false);
-            }
-
             // Check if on top of timed door switch
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Timer")))
             {
@@ -160,7 +148,7 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
                 // Not wall
                 if(!Physics2D.OverlapPoint(transform.position + new Vector3(Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f), Wall))
                 {
-                    GameStateManager.Instance.VillainMoving += 1;
+                    GameStateManager.Instance.VillainCloneMoving += 1;
                     GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(this.gameObject, transform.position));
                     MovePoint.position += new Vector3(Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f);
                 }
@@ -170,7 +158,7 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
             {
                 if(!Physics2D.OverlapPoint(transform.position + new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f), Wall))
                 {
-                    GameStateManager.Instance.VillainMoving += 1;
+                    GameStateManager.Instance.VillainCloneMoving += 1;
                     GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(this.gameObject, transform.position));
                     MovePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f);
                 }

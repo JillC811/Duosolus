@@ -10,8 +10,19 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     public LayerMask Wall;
     public LayerMask Death;
     public LayerMask Villain;
-    public ChangeTile changeTileScript; 
+    public ChangeTile changeTileScript;
     public GameObject deadScreenUI;
+    public GameObject villain; 
+    public Transform villainMovePoint;
+    public GameObject vclone; 
+    public Transform vcloneMovePoint;
+    public Vector3 orangePosition;
+    public Vector3 bluePosition;
+    public GameObject duplicationDestination;
+    public GameObject duplicate;
+    public GameObject timedDoor;
+    private float timer = 2f;
+    private bool isOpen = false;
 
     public Animator animator;
 
@@ -32,6 +43,15 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             animator.SetBool("isMoving", true);
         }
         else animator.SetBool("isMoving", false);
+
+         //Animation Purpose
+        if (MovePoint.position.y > transform.position.y)
+            animator.SetInteger("direction", 2);
+        else if (MovePoint.position.y < transform.position.y) animator.SetInteger("direction", 0);
+
+        if (MovePoint.position.x > transform.position.x)
+            animator.SetInteger("direction", 3);
+        else if (MovePoint.position.x < transform.position.x) animator.SetInteger("direction", 1);
 
         // Check if instance is done moving
         if(transform.position == MovePoint.position && GameStateManager.Instance.HeroMoving > 0)
@@ -88,18 +108,71 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 }
             }
             
+            // Check if on top of a teleportation tile
+            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Teleport")))
+            {
+                GameObject obj = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Teleport")).gameObject;
+                switch(obj.name)
+                {
+                    case "Teleport_Blue":
+                        transform.position = orangePosition;
+                        MovePoint.position = transform.position;
+                        break;
+                    case "Teleport_Orange":
+                        transform.position = bluePosition;
+                        MovePoint.position = transform.position;
+                        break;
+                }
+            }
+
+            // Check if on top of a swap tile
+            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Swap")) || Physics2D.OverlapPoint(new Vector3(villain.transform.position.x, villain.transform.position.y), LayerMask.GetMask("Swap")))
+            {   
+                Vector3 HeroPosition = transform.position;
+                Vector3 HeroMovePoint = MovePoint.position;
+                MovePoint.position = villainMovePoint.position;
+                villainMovePoint.position = HeroMovePoint;
+                transform.position = villain.transform.position;
+                villain.transform.position = HeroPosition;
+            }
+            if(GameStateManager.Instance.villainDuplicateActive && Physics2D.OverlapPoint(new Vector3(vclone.transform.position.x, vclone.transform.position.y), LayerMask.GetMask("Swap"))) {
+                Vector3 HeroPosition = transform.position;
+                Vector3 HeroMovePoint = MovePoint.position;
+                MovePoint.position = vcloneMovePoint.position;
+                vcloneMovePoint.position = HeroMovePoint;
+                transform.position = vclone.transform.position;
+                vclone.transform.position = HeroPosition;
+            }
+
+            // Check if on top of a duplicator
+            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Duplicator")))
+            {
+                GameObject obj = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Duplicator")).gameObject;
+                GameStateManager.Instance.heroDuplicateActive = true;
+                duplicate.SetActive(true);
+                obj.SetActive(false);
+                duplicationDestination.SetActive(false);
+            }
+
+            // Check if on top of timed door switch
+            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Timer")))
+            {
+                isOpen = true;
+                timedDoor.SetActive(false);
+            }
         }
-        
-        //Animation Purpose
-        if (MovePoint.position.y > transform.position.y)
-            animator.SetInteger("direction", 2);
-        else if (MovePoint.position.y < transform.position.y) animator.SetInteger("direction", 0);
 
-        if (MovePoint.position.x > transform.position.x)
-            animator.SetInteger("direction", 3);
-        else if (MovePoint.position.x < transform.position.x) animator.SetInteger("direction", 1);
-        
-
+        // If the timed door is open reduce the timer until it is closed
+        if (isOpen)
+            {
+                timer -= Time.deltaTime;
+                if (timer <= 0f)
+                {
+                    timer = 2f;
+                    isOpen = false;
+                    timedDoor.SetActive(true);
+                }
+            }
 
         // If hero dead, don't do anything
         if(GameStateManager.Instance.EventOccurance)
