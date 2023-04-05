@@ -20,6 +20,8 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
     private float timer = 2f;
     private bool isOpen = false;
 
+    private Vector3 startPos;
+
     public Animator animator;
 
     // Start is called before the first frame update
@@ -27,6 +29,7 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
     {
         MovePoint.parent = null;
         animator = GetComponent<Animator>();
+        startPos = transform.position;
     }
 
     // Update is called once per frame
@@ -190,6 +193,8 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
     {
         transform.position = coord;
         MovePoint.position = coord;
+
+        if(coord == startPos) gameObject.active = false;
 
         if(isDead)
         {

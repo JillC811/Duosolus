@@ -132,7 +132,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 279641843}
-  - component: {fileID: 279641842}
   - component: {fileID: 279641841}
   - component: {fileID: 279641840}
   - component: {fileID: 279641839}
@@ -204,18 +203,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 1
   m_TargetDisplay: 0
---- !u!114 &279641842
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 279641838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6903ff23357d1a4e8c666a260e2f8ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &279641843
 RectTransform:
   m_ObjectHideFlags: 0
@@ -655,8 +642,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -772,7 +759,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24300002, guid: cbff8a99bbe7544128e4d59e9ea82eed, type: 2}
   m_audioClip: {fileID: 8300000, guid: 8098436b5d9432b46ae750720fc56007, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 1
   Mute: 0

@@ -14,6 +14,8 @@ public class CloneVillainMovement : MonoBehaviour, InterfaceUndo
     public GameObject timedDoor;
     private float timer = 2f;
     private bool isOpen = false;
+
+    public Vector3 startPos;
     
     public Animator animator;
 
@@ -22,6 +24,7 @@ public class CloneVillainMovement : MonoBehaviour, InterfaceUndo
     {
         MovePoint.parent = null;
         animator = GetComponent<Animator>();
+        startPos = transform.position;
     }
 
     // Update is called once per frame
@@ -171,6 +174,8 @@ public class CloneVillainMovement : MonoBehaviour, InterfaceUndo
     // Undo last move, called by GameStateManager
     public void undo(Vector3 coord)
     {
+        if(coord == startPos) gameObject.active = false;
+
         transform.position = coord;
         MovePoint.position = coord;
     }
