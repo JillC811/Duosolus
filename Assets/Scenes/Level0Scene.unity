@@ -1063,8 +1063,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   changeTileScript: {fileID: 299270322}
-  orangePosition: {x: 0, y: 0, z: 0}
-  bluePosition: {x: 0, y: 0, z: 0}
+  orangeTile: {fileID: 0}
+  blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
   duplicate: {fileID: 0}
   timedDoor: {fileID: 0}
@@ -2223,7 +2223,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 24300002, guid: cbff8a99bbe7544128e4d59e9ea82eed, type: 2}
   m_audioClip: {fileID: 8300000, guid: 26d0da938cd32ad4a841b659143d442d, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.324
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -8467,8 +8467,8 @@ MonoBehaviour:
   villainMovePoint: {fileID: 0}
   vclone: {fileID: 0}
   vcloneMovePoint: {fileID: 0}
-  orangePosition: {x: 0, y: 0, z: 0}
-  bluePosition: {x: 0, y: 0, z: 0}
+  orangeTile: {fileID: 0}
+  blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
   duplicate: {fileID: 0}
   timedDoor: {fileID: 0}

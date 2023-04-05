@@ -378,7 +378,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 132073479}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.241, y: -0.36, z: 0}
+  m_LocalPosition: {x: -0.24, y: -0.56, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1417,7 +1417,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 314568422}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.38011742, y: 0.023790808, z: 0.0033066964}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2147,9 +2147,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 132737003
+  m_SortingLayer: 1
+  m_SortingOrder: 3
   m_Sprite: {fileID: -506985464, guid: 4984f85167f8278469b33562526917e6, type: 3}
   m_Color: {r: 1, g: 0.6666667, b: 0, a: 1}
   m_FlipX: 0
@@ -2169,7 +2169,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 499497997}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.0761174, y: 0.70420915, z: 0.9966933}
+  m_LocalPosition: {x: -1.12, y: 0.7, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2265,6 +2265,7 @@ GameObject:
   - component: {fileID: 611856751}
   - component: {fileID: 611856750}
   - component: {fileID: 611856749}
+  - component: {fileID: 611856754}
   m_Layer: 14
   m_Name: Duplication_Activator
   m_TagString: Untagged
@@ -2289,7 +2290,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 0.16, y: 0.14}
     newSize: {x: 0.13, y: 0.13}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -2380,7 +2381,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -506985464, guid: 4984f85167f8278469b33562526917e6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0a968383663b1cc45a783787a1ce9e71, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2399,13 +2400,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 611856748}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.1878826, y: 0.6832092, z: 4.996693}
+  m_LocalPosition: {x: 0.56, y: 0.56, z: 4.996693}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 314568423}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &611856754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 611856748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdf5149f5f08ca441b0ab06c0edbb193, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &633848080
 GameObject:
   m_ObjectHideFlags: 0
@@ -4240,7 +4253,6 @@ GameObject:
   - component: {fileID: 1087969249}
   - component: {fileID: 1087969248}
   - component: {fileID: 1087969247}
-  - component: {fileID: 1087969246}
   - component: {fileID: 1087969245}
   m_Layer: 0
   m_Name: Duplication_Dest
@@ -4275,26 +4287,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.13, y: 0.13}
   m_EdgeRadius: 0
---- !u!95 &1087969246
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1087969244}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c110dbdb08445e74591a4c0b6d68df37, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
 --- !u!50 &1087969247
 Rigidbody2D:
   serializedVersion: 4
@@ -4357,8 +4349,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -506985464, guid: 4984f85167f8278469b33562526917e6, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 4d57db0f590adf14a912a5faacda195b, type: 3}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4376,7 +4368,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1087969244}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.6201174, y: -0.4087908, z: 4.996693}
+  m_LocalPosition: {x: -0.24, y: -0.56, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6935,7 +6927,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1552202371}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.237, y: -0.366, z: 0}
+  m_LocalPosition: {x: -0.24, y: -0.56, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6967,6 +6959,7 @@ MonoBehaviour:
   orangePosition: {x: -0.696, y: 0.728, z: 0}
   bluePosition: {x: -0.681, y: -0.697, z: 0}
   timedDoor: {fileID: 1899787520}
+  startPos: {x: 0, y: 0, z: 0}
   animator: {fileID: 0}
 --- !u!1 &1553102584
 GameObject:
@@ -8356,7 +8349,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -506985464, guid: 4984f85167f8278469b33562526917e6, type: 3}
   m_Color: {r: 0, g: 0.53333336, b: 1, a: 1}
   m_FlipX: 0
@@ -8376,7 +8369,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1827325094}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.0611174, y: -0.72079086, z: 0.9966933}
+  m_LocalPosition: {x: -1.12, y: -0.8, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

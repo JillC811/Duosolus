@@ -15,7 +15,7 @@ public class SelectPlay : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && GetComponent<Collider2D>().OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition))) {
             GlobalGameStateManager.Instance.LoadData();
-            SceneManager.LoadScene("LevelMenuScene", LoadSceneMode.Single);
+            SceneManager.LoadScene("IntroScene", LoadSceneMode.Single);
         }
         
     }

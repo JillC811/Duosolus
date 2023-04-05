@@ -2,24 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
+public class CloneVillainMovement : MonoBehaviour, InterfaceUndo
 {
     public float MoveSpeed;
-    public bool isDead = false;
     public Transform MovePoint;
     public LayerMask Wall;
     public LayerMask Death;
-    public LayerMask Villain;
     public ChangeTile changeTileScript;
-    public GameObject deadScreenUI;
-    public GameObject villain; 
-    public Transform villainMovePoint;
     public Vector3 orangePosition;
     public Vector3 bluePosition;
     public GameObject timedDoor;
     private float timer = 2f;
     private bool isOpen = false;
 
+    public Vector3 startPos;
+    
     public Animator animator;
 
     // Start is called before the first frame update
@@ -27,20 +24,29 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
     {
         MovePoint.parent = null;
         animator = GetComponent<Animator>();
+        startPos = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // If hero dead, don't do anything - or if an event is happening
+        if(GameStateManager.Instance.EventOccurance)
+        {
+            MovePoint.position = transform.position;
+            animator.SetBool("isMoving", false);
+            return;
+        }
+
         // Check if space is free, move on if so
-        if (GameStateManager.Instance.HeroCloneMoving > 0 || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
+        if (GameStateManager.Instance.VillainCloneMoving > 0 || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
         {
             transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
             animator.SetBool("isMoving", true);
         }
         else animator.SetBool("isMoving", false);
 
-         //Animation Purpose
+        //Animation Purpose
         if (MovePoint.position.y > transform.position.y)
             animator.SetInteger("direction", 2);
         else if (MovePoint.position.y < transform.position.y) animator.SetInteger("direction", 0);
@@ -50,9 +56,9 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
         else if (MovePoint.position.x < transform.position.x) animator.SetInteger("direction", 1);
 
         // Check if instance is done moving
-        if(transform.position == MovePoint.position && GameStateManager.Instance.HeroCloneMoving > 0)
+        if(transform.position == MovePoint.position && GameStateManager.Instance.VillainCloneMoving > 0)
         {
-            GameStateManager.Instance.HeroCloneMoving = 0;
+            GameStateManager.Instance.VillainCloneMoving = 0;
 
             // Check if on top of oneway
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Oneway")))
@@ -80,14 +86,11 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
             }
             
             // Check if on top of death tile
-            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Player_Villain")))
+            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) && !GameStateManager.Instance.EventOccurance)
             {
-                deadScreenUI.SetActive(true);
-                isDead = true;
                 animator.SetBool("isDead", true);
                 GameStateManager.Instance.EventOccurance = true;
-                GameStateManager.Instance.VillainMoving = 0;
-                Debug.Log("Player Pos " + transform.position);
+                GameStateManager.Instance.Clear();
             }
 
             // Check if on top of switch tile
@@ -103,7 +106,7 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
                     }
                 }
             }
-            
+
             // Check if on top of a teleportation tile
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Teleport")))
             {
@@ -119,17 +122,6 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
                         MovePoint.position = transform.position;
                         break;
                 }
-            }
-
-            // Check if on top of a swap tile
-            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Swap")))
-            {   
-                Vector3 HeroPosition = transform.position;
-                Vector3 HeroMovePoint = MovePoint.position;
-                MovePoint.position = villainMovePoint.position;
-                villainMovePoint.position = HeroMovePoint;
-                transform.position = villain.transform.position;
-                villain.transform.position = HeroPosition;
             }
 
             // Check if on top of timed door switch
@@ -152,12 +144,6 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
                 }
             }
 
-        // If hero dead, don't do anything
-        if(GameStateManager.Instance.EventOccurance)
-        {
-            return;
-        }
-
         if(!GameStateManager.Instance.PlayerMoving)
         {
             if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
@@ -165,7 +151,7 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
                 // Not wall
                 if(!Physics2D.OverlapPoint(transform.position + new Vector3(Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f), Wall))
                 {
-                    GameStateManager.Instance.HeroCloneMoving += 1;
+                    GameStateManager.Instance.VillainCloneMoving += 1;
                     GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(this.gameObject, transform.position));
                     MovePoint.position += new Vector3(Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f);
                 }
@@ -175,7 +161,7 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
             {
                 if(!Physics2D.OverlapPoint(transform.position + new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f), Wall))
                 {
-                    GameStateManager.Instance.HeroCloneMoving += 1;
+                    GameStateManager.Instance.VillainCloneMoving += 1;
                     GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(this.gameObject, transform.position));
                     MovePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f);
                 }
@@ -188,16 +174,10 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
     // Undo last move, called by GameStateManager
     public void undo(Vector3 coord)
     {
+        if(coord == startPos) gameObject.active = false;
+
         transform.position = coord;
         MovePoint.position = coord;
-
-        if(isDead)
-        {
-            GameStateManager.Instance.EventOccurance = false;
-            animator.SetBool("isDead", false);
-            isDead = false;
-            deadScreenUI.SetActive(false);
-        }
     }
 }
 
