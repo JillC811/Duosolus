@@ -18,10 +18,10 @@ TagManager:
   - Switch
   - Oneway
   - Spike
-  - 
-  - 
-  - 
-  - 
+  - Teleport
+  - Swap
+  - Duplicator
+  - Timer
   - 
   - 
   - 
@@ -41,4 +41,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI
+    uniqueID: 132737003
     locked: 0

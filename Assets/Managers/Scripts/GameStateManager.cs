@@ -28,8 +28,12 @@ public class GameStateManager : MonoBehaviour
     public bool GameIsPaused = false;
     public bool PlayerMoving = false;
     public bool Cleared = false;
+    public bool heroDuplicateActive = false;
+    public bool villainDuplicateActive = false;
     public int HeroMoving = 0;
     public int VillainMoving = 0;
+    public int HeroCloneMoving = 0;
+    public int VillainCloneMoving = 0;
     public GameObject clearScreenUI;
 
     private void Awake()
@@ -48,15 +52,39 @@ public class GameStateManager : MonoBehaviour
     // Called per frame
     void Update() {
         // Check if players moved, update PlayerMoving variable accordingly
-        if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0)
-        {
-            PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
-            PlayerMoving = false;
+        if (!heroDuplicateActive && !villainDuplicateActive) {
+            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0)
+            {
+                PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                PlayerMoving = false;
+            }
+            else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0))
+            {
+                PlayerMoving = true;
+            } 
         }
-        else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0))
-        {
-            PlayerMoving = true;
-        } 
+        else if (heroDuplicateActive) {
+            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && HeroCloneMoving == 0)
+            {
+                PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                PlayerMoving = false;
+            }
+            else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || HeroCloneMoving > 0))
+            {
+                PlayerMoving = true;
+            } 
+        }
+       else if (villainDuplicateActive) {
+            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && VillainCloneMoving == 0)
+            {
+                PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                PlayerMoving = false;
+            }
+            else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || VillainCloneMoving > 0))
+            {
+                PlayerMoving = true;
+            } 
+        }
 
         // Undo
         if(!PlayerMoving && !Cleared && Input.GetKeyDown(KeyCode.Backspace))

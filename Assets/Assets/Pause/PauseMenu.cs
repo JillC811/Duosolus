@@ -7,6 +7,7 @@ public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuUI;
     public GameObject deadScreenUI;
+    public GameObject settingsMenuUI;
     public bool wasPaused = false;
 
     void Update() {
@@ -57,10 +58,10 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void Settings() {
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 0f;
+        settingsMenuUI.SetActive(true);
         GameStateManager.Instance.GameIsPaused = false;
-        Time.timeScale = 1f;
-        // SceneManager.LoadScene("Insert Settings Scene Here");
-        Debug.Log("Loading Settings...");
     }
 
     public void LoadMap() {
@@ -71,7 +72,10 @@ public class PauseMenu : MonoBehaviour
     }
 
     public void QuitGame() {
-        Application.Quit();
+        Time.timeScale = 1f;
+        GlobalGameStateManager.Instance.curLevel = SceneNameToLevel(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("MainMenuScene", LoadSceneMode.Single);
+        Debug.Log("Loading Main Menu out of " + name + "...");
     }
 
     public static int SceneNameToLevel(string sceneName)
