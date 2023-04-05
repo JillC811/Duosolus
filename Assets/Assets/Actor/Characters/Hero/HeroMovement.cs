@@ -172,15 +172,15 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
 
         // If the timed door is open reduce the timer until it is closed
         if (isOpen)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0f)
             {
-                timer -= Time.deltaTime;
-                if (timer <= 0f)
-                {
-                    timer = 2f;
-                    isOpen = false;
-                    timedDoor.SetActive(true);
-                }
+                timer = 2f;
+                isOpen = false;
+                timedDoor.SetActive(true);
             }
+        }
 
         // If hero dead, don't do anything
         if(GameStateManager.Instance.EventOccurance)
