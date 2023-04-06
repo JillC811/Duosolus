@@ -7,15 +7,33 @@ using UnityEngine.Tilemaps;
 public class PlayerLevelSelect : MonoBehaviour
 {
     Vector2[] coords = new Vector2[]{
-        new Vector2(-0.4f, -0.72f),
+        // World 1
         new Vector2(-0.72f, -0.72f),
-        new Vector2(-0.72f, -0.4f),
-        new Vector2(-0.4f, -0.4f),
+        new Vector2(-0.4f, -0.56f),
+        new Vector2(-0.08f, -0.4f),
+        new Vector2(-0.4f, -0.08f),
+        new Vector2(-0.08f, 0.08f),
+        new Vector2(0.24f, 0.24f),
         
-        new Vector2(0.24f + 0.16f, -0.56f),
-        new Vector2(0.56f + 0.16f, -0.56f),
-        new Vector2(0.56f + 0.16f, -0.24f),
-        new Vector2(0.24f + 0.16f, -0.24f)
+        // World 2
+        new Vector2(0.56f, 1.36f),
+        new Vector2(0.88f, 1.52f),
+        new Vector2(0.72f, 1.84f),
+        new Vector2(0.4f, 2.00f),
+
+        // World 3
+        new Vector2(-0.08f, 3.12f),
+        new Vector2(-0.4f, 3.28f),
+        new Vector2(-0.08f, 3.44f),
+        new Vector2(-0.4f, 3.60f),
+
+        // Final World
+        new Vector2(-0.08f, 4.72f),
+        new Vector2(0.24f, 4.88f),
+        new Vector2(-0.08f, 5.04f),
+        new Vector2(0.24f, 5.20f),
+        new Vector2(-0.24f, 5.36f),
+        new Vector2(0.08f, 5.52f)
     };
     int index;
 

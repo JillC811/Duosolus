@@ -16,8 +16,10 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     public Transform villainMovePoint;
     public GameObject vclone; 
     public Transform vcloneMovePoint;
-    public Vector3 orangePosition;
-    public Vector3 bluePosition;
+    public GameObject orangeTile;
+    public GameObject blueTile;
+    private Vector3 orangePosition;
+    private Vector3 bluePosition;
     public GameObject duplicationDestination;
     public GameObject duplicate;
     public GameObject timedDoor;
@@ -31,6 +33,10 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     {
         MovePoint.parent = null;
         animator = GetComponent<Animator>();
+
+        orangePosition = orangeTile.transform.position;
+        bluePosition = blueTile.transform.position;
+
     }
 
     // Update is called once per frame
@@ -150,7 +156,9 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 GameObject obj = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Duplicator")).gameObject;
                 GameStateManager.Instance.heroDuplicateActive = true;
                 duplicate.SetActive(true);
+
                 obj.SetActive(false);
+                GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(obj, obj.transform.position));
                 duplicationDestination.SetActive(false);
             }
 
@@ -164,15 +172,15 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
 
         // If the timed door is open reduce the timer until it is closed
         if (isOpen)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0f)
             {
-                timer -= Time.deltaTime;
-                if (timer <= 0f)
-                {
-                    timer = 2f;
-                    isOpen = false;
-                    timedDoor.SetActive(true);
-                }
+                timer = 2f;
+                isOpen = false;
+                timedDoor.SetActive(true);
             }
+        }
 
         // If hero dead, don't do anything
         if(GameStateManager.Instance.EventOccurance)

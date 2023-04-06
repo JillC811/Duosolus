@@ -9,8 +9,10 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
     public LayerMask Wall;
     public LayerMask Death;
     public ChangeTile changeTileScript;
-    public Vector3 orangePosition;
-    public Vector3 bluePosition;
+    public GameObject orangeTile;
+    public GameObject blueTile;
+    private Vector3 orangePosition;
+    private Vector3 bluePosition;
     public GameObject duplicationDestination; 
     public GameObject duplicate; 
     public GameObject timedDoor;
@@ -24,6 +26,9 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
     {
         MovePoint.parent = null;
         animator = GetComponent<Animator>();
+
+        orangePosition = orangeTile.transform.position;
+        bluePosition = blueTile.transform.position;
     }
 
     // Update is called once per frame
@@ -129,7 +134,9 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
                 GameObject obj = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Duplicator")).gameObject;
                 GameStateManager.Instance.villainDuplicateActive = true;
                 duplicate.SetActive(true);
+
                 obj.SetActive(false);
+                GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(obj, obj.transform.position));
                 duplicationDestination.SetActive(false);
             }
 
