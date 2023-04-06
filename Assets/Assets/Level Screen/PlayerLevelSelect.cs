@@ -72,7 +72,7 @@ public class PlayerLevelSelect : MonoBehaviour
         }
         else if (Input.GetKeyDown("right") || Input.GetKeyDown("up"))
         {
-            if(index + 1 < coords.Length && GlobalGameStateManager.Instance.clearedLevels[index]) transform.position = coords[++index];
+            if(index + 1 < coords.Length && GlobalGameStateManager.Instance.clearedLevels[index])  transform.position = coords[++index];
         }
 
         if (Input.GetKeyDown("space"))

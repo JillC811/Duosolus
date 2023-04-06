@@ -2673,6 +2673,8 @@ GameObject:
   - component: {fileID: 773566397}
   - component: {fileID: 773566396}
   - component: {fileID: 773566399}
+  - component: {fileID: 773566400}
+  - component: {fileID: 773566401}
   m_Layer: 15
   m_Name: TimedSwitch
   m_TagString: Untagged
@@ -2832,6 +2834,120 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
+--- !u!114 &773566400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773566394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68901f60b6da8524ba9776628bed0dee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Wall: {fileID: 1899787520}
+  Turn: 3
+  initTile: {fileID: 11400000, guid: c284b9b57503b5343a7f29193f92a293, type: 2}
+  newTile: {fileID: 11400000, guid: 7469e2c1e66768243884776acabf28d5, type: 2}
+  InitTurn: 0
+  tileToFind: {fileID: 0}
+--- !u!82 &773566401
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773566394}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &808365326
 GameObject:
   m_ObjectHideFlags: 0
@@ -4030,11 +4146,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   changeTileScript: {fileID: 0}
-  orangePosition: {x: -0.696, y: 0.728, z: 0}
-  bluePosition: {x: -0.681, y: -0.697, z: 0}
+  orangeTile: {fileID: 0}
+  blueTile: {fileID: 0}
   duplicationDestination: {fileID: 1087969244}
   duplicate: {fileID: 1552202371}
-  timedDoor: {fileID: 1899787520}
   animator: {fileID: 0}
 --- !u!50 &1016359281
 Rigidbody2D:
@@ -8619,7 +8734,7 @@ Tilemap:
   m_GameObject: {fileID: 1899787520}
   m_Enabled: 1
   m_Tiles:
-  - first: {x: -5, y: -1, z: 0}
+  - first: {x: 1, y: -3, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 0
@@ -8661,8 +8776,8 @@ Tilemap:
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: -5, y: -1, z: 0}
-  m_Size: {x: 5, y: 1, z: 1}
+  m_Origin: {x: -5, y: -3, z: 0}
+  m_Size: {x: 7, y: 3, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -9095,11 +9210,10 @@ MonoBehaviour:
   villainMovePoint: {fileID: 773559576}
   vclone: {fileID: 1552202371}
   vcloneMovePoint: {fileID: 1318884347}
-  orangePosition: {x: -0.696, y: 0.728, z: 0}
-  bluePosition: {x: -0.681, y: -0.697, z: 0}
+  orangeTile: {fileID: 0}
+  blueTile: {fileID: 0}
   duplicationDestination: {fileID: 1087969244}
   duplicate: {fileID: 132073479}
-  timedDoor: {fileID: 1899787520}
   animator: {fileID: 2133987809}
 --- !u!50 &2133987811
 Rigidbody2D:
@@ -9219,6 +9333,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04acd71db6a17dd4aab8752806fe4e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SwitchObject: []
+  SwitchTime: 
   EventOccurance: 0
   GameIsPaused: 0
   PlayerMoving: 0
@@ -9230,6 +9346,7 @@ MonoBehaviour:
   HeroCloneMoving: 0
   VillainCloneMoving: 0
   clearScreenUI: {fileID: 0}
+  TurnCount: 0
 --- !u!4 &2142301450
 Transform:
   m_ObjectHideFlags: 0
