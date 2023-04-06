@@ -6,7 +6,7 @@ public class GlobalGameStateManager : MonoBehaviour
 {
     public static GlobalGameStateManager Instance { get; private set; }
 
-    static int MAX_LEVEL = 8;
+    static int MAX_LEVEL = 20;
     public bool[] clearedLevels;
 
     public int curLevel = 0;
@@ -32,6 +32,7 @@ public class GlobalGameStateManager : MonoBehaviour
 
     public void LoadData()
     {
+        /**
         string filePath = Application.persistentDataPath + "/clearedLevels.dat";
         if (File.Exists(filePath))
         {
@@ -47,7 +48,8 @@ public class GlobalGameStateManager : MonoBehaviour
         else
         {
             clearedLevels = new bool[MAX_LEVEL];
-        }
+        }**/
+        clearedLevels = new bool[MAX_LEVEL];
     }
 
     public void SaveData()
