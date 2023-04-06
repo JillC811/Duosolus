@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections; 
 
 public interface InterfaceUndo
 {
@@ -23,6 +24,8 @@ public class GameStateManager : MonoBehaviour
     }
 
     public Stack<History> PreviousMoves = new Stack<History>();
+    public List<DoorActivate> SwitchObject = new List<DoorActivate>();
+    public List<int> SwitchTime = new List<int>();
 
     public bool EventOccurance = false;
     public bool GameIsPaused = false;
@@ -35,6 +38,8 @@ public class GameStateManager : MonoBehaviour
     public int HeroCloneMoving = 0;
     public int VillainCloneMoving = 0;
     public GameObject clearScreenUI;
+
+    public int TurnCount = 0;
 
     private void Awake()
     {
@@ -51,40 +56,32 @@ public class GameStateManager : MonoBehaviour
 
     // Called per frame
     void Update() {
+
         // Check if players moved, update PlayerMoving variable accordingly
-        if (!heroDuplicateActive && !villainDuplicateActive) {
-            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0)
+        if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0)
+        {
+            // Check for Timed Doors
+            for(int i = 0; i < SwitchTime.Count; i++)
             {
-                PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
-                PlayerMoving = false;
+                if(SwitchTime[i] == TurnCount)
+                {
+                    SwitchObject[i].ResetSwitch();
+                    SwitchObject.RemoveAt(i);
+                    SwitchTime.RemoveAt(i);
+                    i--;
+                }
             }
-            else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0))
-            {
-                PlayerMoving = true;
-            } 
+
+            PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+            PlayerMoving = false;
+            TurnCount++;
         }
-        else if (heroDuplicateActive) {
-            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && HeroCloneMoving == 0)
-            {
-                PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
-                PlayerMoving = false;
-            }
-            else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || HeroCloneMoving > 0))
-            {
-                PlayerMoving = true;
-            } 
-        }
-       else if (villainDuplicateActive) {
-            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && VillainCloneMoving == 0)
-            {
-                PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
-                PlayerMoving = false;
-            }
-            else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || VillainCloneMoving > 0))
-            {
-                PlayerMoving = true;
-            } 
-        }
+        else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0))
+        {
+            PlayerMoving = true;
+        } 
+
+        
 
         // Undo
         if(!PlayerMoving && !Cleared && Input.GetKeyDown(KeyCode.Backspace))
@@ -97,6 +94,7 @@ public class GameStateManager : MonoBehaviour
                 }
 
                 History hist = PreviousMoves.Pop();
+                Debug.Log("Deleted " + hist.target);
                 hist = PreviousMoves.Pop();
                 
                 do
@@ -108,6 +106,19 @@ public class GameStateManager : MonoBehaviour
                 } while(hist.target != null);
 
                 PreviousMoves.Push(new History(null, new Vector3(0f,0f,0f)));
+
+                TurnCount--;
+
+                for(int i = 0; i < SwitchTime.Count; i++)
+                {
+                    if(TurnCount == SwitchObject[i].InitTurn)
+                    {
+                        SwitchObject[i].ResetSwitch();
+                        SwitchObject.RemoveAt(i);
+                        SwitchTime.RemoveAt(i);
+                        i--;
+                    }
+                }
             }
         }
     }

@@ -286,6 +286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04acd71db6a17dd4aab8752806fe4e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SwitchObject: []
+  SwitchTime: 
   EventOccurance: 0
   GameIsPaused: 0
   PlayerMoving: 0
@@ -297,6 +299,7 @@ MonoBehaviour:
   HeroCloneMoving: 0
   VillainCloneMoving: 0
   clearScreenUI: {fileID: 1124315586}
+  TurnCount: 0
 --- !u!4 &63437731
 Transform:
   m_ObjectHideFlags: 0
@@ -787,8 +790,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -862420697
+  m_SortingLayer: 2
   m_SortingOrder: 10
   m_Sprite: {fileID: 1582314838, guid: 35d7b3388d2c76e43b561f6a040f7bad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -842,7 +845,6 @@ MonoBehaviour:
   blueTile: {fileID: 1757428052}
   duplicationDestination: {fileID: 0}
   duplicate: {fileID: 0}
-  timedDoor: {fileID: 0}
   animator: {fileID: 0}
 --- !u!50 &318321155
 Rigidbody2D:
@@ -8910,7 +8912,6 @@ MonoBehaviour:
   blueTile: {fileID: 1757428052}
   duplicationDestination: {fileID: 0}
   duplicate: {fileID: 0}
-  timedDoor: {fileID: 0}
   animator: {fileID: 2100117391}
 --- !u!50 &2100117388
 Rigidbody2D:
@@ -8971,8 +8972,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -862420697
+  m_SortingLayer: 2
   m_SortingOrder: 10
   m_Sprite: {fileID: -136284943, guid: fe69ec28d0dc86c4bb37eed4cca50519, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

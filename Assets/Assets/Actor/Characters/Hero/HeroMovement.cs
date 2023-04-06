@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class HeroMovement : MonoBehaviour, InterfaceUndo
 {
     public float MoveSpeed;
@@ -22,11 +23,14 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     private Vector3 bluePosition;
     public GameObject duplicationDestination;
     public GameObject duplicate;
-    public GameObject timedDoor;
-    private float timer = 2f;
     private bool isOpen = false;
 
     public Animator animator;
+    
+    private const string HERO_DEATH_SFX_FILEPATH = "SFX/Hit7";
+    private const string SWITCH_PRESS_SFX_FILEPATH = "SFX/Magic2";
+    private const string SWAP_SFX_FILEPATH = "SFX/Spirit";
+    private const string TELEPORT_SFX_FILEPATH = "SFX/PowerUp1";
 
     // Start is called before the first frame update
     void Start()
@@ -97,7 +101,13 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 animator.SetBool("isDead", true);
                 GameStateManager.Instance.EventOccurance = true;
                 GameStateManager.Instance.VillainMoving = 0;
-                Debug.Log("Player Pos " + transform.position);
+                
+                // SFX
+                AudioClip clip = Resources.Load<AudioClip>(HERO_DEATH_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
             }
 
             // Check if on top of switch tile
@@ -110,6 +120,12 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                     if (changeTileScript != null)
                     {
                         changeTileScript.deleteTile(transform.position);
+                        // SFX
+                        AudioClip clip = Resources.Load<AudioClip>(SWITCH_PRESS_SFX_FILEPATH);
+                        AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                        audioSource.clip = clip;
+                        audioSource.volume = 0.3f;
+                        audioSource.Play();
                     }
                 }
             }
@@ -129,6 +145,13 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                         MovePoint.position = transform.position;
                         break;
                 }
+
+                // SFX
+                 AudioClip clip = Resources.Load<AudioClip>(TELEPORT_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
             }
 
             // Check if on top of a swap tile
@@ -140,6 +163,12 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 villainMovePoint.position = HeroMovePoint;
                 transform.position = villain.transform.position;
                 villain.transform.position = HeroPosition;
+                // SFX
+                 AudioClip clip = Resources.Load<AudioClip>(SWAP_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
             }
             if(GameStateManager.Instance.villainDuplicateActive && Physics2D.OverlapPoint(new Vector3(vclone.transform.position.x, vclone.transform.position.y), LayerMask.GetMask("Swap"))) {
                 Vector3 HeroPosition = transform.position;
@@ -165,20 +194,8 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             // Check if on top of timed door switch
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Timer")))
             {
-                isOpen = true;
-                timedDoor.SetActive(false);
-            }
-        }
-
-        // If the timed door is open reduce the timer until it is closed
-        if (isOpen)
-        {
-            timer -= Time.deltaTime;
-            if (timer <= 0f)
-            {
-                timer = 2f;
-                isOpen = false;
-                timedDoor.SetActive(true);
+                DoorActivate timedDoor = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Timer")).GetComponent<DoorActivate>();
+                timedDoor.ActivateSwitch(false);
             }
         }
 
