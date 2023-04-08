@@ -58,8 +58,9 @@ public class GameStateManager : MonoBehaviour
     void Update() {
 
         // Check if players moved, update PlayerMoving variable accordingly
-        if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0)
-        {
+        if (heroDuplicateActive) {
+            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && HeroCloneMoving == 0) 
+            {
             // Check for Timed Doors
             for(int i = 0; i < SwitchTime.Count; i++)
             {
@@ -75,12 +76,60 @@ public class GameStateManager : MonoBehaviour
             PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
             PlayerMoving = false;
             TurnCount++;
+            }
+            else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || HeroCloneMoving > 0))
+            {
+                PlayerMoving = true;
+            } 
         }
-        else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0))
-        {
-            PlayerMoving = true;
-        } 
+        else if (villainDuplicateActive) {
+            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && VillainCloneMoving == 0)
+            {
+            // Check for Timed Doors
+            for(int i = 0; i < SwitchTime.Count; i++)
+            {
+                if(SwitchTime[i] == TurnCount)
+                {
+                    SwitchObject[i].ResetSwitch();
+                    SwitchObject.RemoveAt(i);
+                    SwitchTime.RemoveAt(i);
+                    i--;
+                }
+            }
 
+            PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+            PlayerMoving = false;
+            TurnCount++;
+            }
+            else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || VillainCloneMoving > 0))
+            {
+                PlayerMoving = true;
+            } 
+        }
+        else {
+            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0)
+            {
+            // Check for Timed Doors
+            for(int i = 0; i < SwitchTime.Count; i++)
+            {
+                if(SwitchTime[i] == TurnCount)
+                {
+                    SwitchObject[i].ResetSwitch();
+                    SwitchObject.RemoveAt(i);
+                    SwitchTime.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+            PlayerMoving = false;
+            TurnCount++;
+            }
+            else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0))
+            {
+                PlayerMoving = true;
+            } 
+        }
         
 
         // Undo

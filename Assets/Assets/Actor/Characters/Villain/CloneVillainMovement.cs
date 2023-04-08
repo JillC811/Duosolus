@@ -9,22 +9,26 @@ public class CloneVillainMovement : MonoBehaviour, InterfaceUndo
     public LayerMask Wall;
     public LayerMask Death;
     public ChangeTile changeTileScript;
-    public Vector3 orangePosition;
-    public Vector3 bluePosition;
-    public GameObject timedDoor;
-    private float timer = 2f;
-    private bool isOpen = false;
+    public GameObject orangeTile;
+    public GameObject blueTile;
+    private Vector3 orangePosition;
+    private Vector3 bluePosition;
 
-    public Vector3 startPos;
-    
     public Animator animator;
+
+    private const string VILLAIN_DEATH_SFX_FILEPATH = "SFX/Success3";
+    private const string SWAP_SFX_FILEPATH = "SFX/Spirit";
+    private const string TELEPORT_SFX_FILEPATH = "SFX/PowerUp1";
+    
 
     // Start is called before the first frame update
     void Start()
     {
         MovePoint.parent = null;
         animator = GetComponent<Animator>();
-        startPos = transform.position;
+
+        orangePosition = orangeTile.transform.position;
+        bluePosition = blueTile.transform.position;
     }
 
     // Update is called once per frame
@@ -91,6 +95,13 @@ public class CloneVillainMovement : MonoBehaviour, InterfaceUndo
                 animator.SetBool("isDead", true);
                 GameStateManager.Instance.EventOccurance = true;
                 GameStateManager.Instance.Clear();
+
+                // SFX
+                AudioClip clip = Resources.Load<AudioClip>(VILLAIN_DEATH_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
             }
 
             // Check if on top of switch tile
@@ -122,27 +133,22 @@ public class CloneVillainMovement : MonoBehaviour, InterfaceUndo
                         MovePoint.position = transform.position;
                         break;
                 }
+
+                // SFX
+                 AudioClip clip = Resources.Load<AudioClip>(TELEPORT_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
             }
 
             // Check if on top of timed door switch
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Timer")))
             {
-                isOpen = true;
-                timedDoor.SetActive(false);
+                DoorActivate timedDoor = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Timer")).GetComponent<DoorActivate>();
+                timedDoor.ActivateSwitch(false);
             }
         }
-
-        // If the timed door is open reduce the timer until it is closed
-        if (isOpen)
-            {
-                timer -= Time.deltaTime;
-                if (timer <= 0f)
-                {
-                    timer = 2f;
-                    isOpen = false;
-                    timedDoor.SetActive(true);
-                }
-            }
 
         if(!GameStateManager.Instance.PlayerMoving)
         {
@@ -174,8 +180,6 @@ public class CloneVillainMovement : MonoBehaviour, InterfaceUndo
     // Undo last move, called by GameStateManager
     public void undo(Vector3 coord)
     {
-        if(coord == startPos) gameObject.active = false;
-
         transform.position = coord;
         MovePoint.position = coord;
     }

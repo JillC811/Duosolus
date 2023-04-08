@@ -23,7 +23,6 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     private Vector3 bluePosition;
     public GameObject duplicationDestination;
     public GameObject duplicate;
-    private bool isOpen = false;
 
     public Animator animator;
     
@@ -164,7 +163,7 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 transform.position = villain.transform.position;
                 villain.transform.position = HeroPosition;
                 // SFX
-                 AudioClip clip = Resources.Load<AudioClip>(SWAP_SFX_FILEPATH);
+                AudioClip clip = Resources.Load<AudioClip>(SWAP_SFX_FILEPATH);
                 AudioSource audioSource = gameObject.AddComponent<AudioSource>();
                 audioSource.clip = clip;
                 audioSource.volume = 0.3f;
@@ -177,6 +176,12 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 vcloneMovePoint.position = HeroMovePoint;
                 transform.position = vclone.transform.position;
                 vclone.transform.position = HeroPosition;
+                // SFX
+                AudioClip clip = Resources.Load<AudioClip>(SWAP_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
             }
 
             // Check if on top of a duplicator

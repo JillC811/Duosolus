@@ -15,7 +15,6 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
     private Vector3 bluePosition;
     public GameObject duplicationDestination; 
     public GameObject duplicate; 
-    private bool isOpen = false;
 
     public Animator animator;
 

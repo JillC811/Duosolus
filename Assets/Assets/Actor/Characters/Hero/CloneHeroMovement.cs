@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
 {
     public float MoveSpeed;
@@ -14,22 +15,27 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
     public GameObject deadScreenUI;
     public GameObject villain; 
     public Transform villainMovePoint;
-    public Vector3 orangePosition;
-    public Vector3 bluePosition;
-    public GameObject timedDoor;
-    private float timer = 2f;
-    private bool isOpen = false;
-
-    private Vector3 startPos;
+    public GameObject orangeTile;
+    public GameObject blueTile;
+    private Vector3 orangePosition;
+    private Vector3 bluePosition;
 
     public Animator animator;
+    
+    private const string HERO_DEATH_SFX_FILEPATH = "SFX/Hit7";
+    private const string SWITCH_PRESS_SFX_FILEPATH = "SFX/Magic2";
+    private const string SWAP_SFX_FILEPATH = "SFX/Spirit";
+    private const string TELEPORT_SFX_FILEPATH = "SFX/PowerUp1";
 
     // Start is called before the first frame update
     void Start()
     {
         MovePoint.parent = null;
         animator = GetComponent<Animator>();
-        startPos = transform.position;
+
+        orangePosition = orangeTile.transform.position;
+        bluePosition = blueTile.transform.position;
+
     }
 
     // Update is called once per frame
@@ -90,7 +96,13 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
                 animator.SetBool("isDead", true);
                 GameStateManager.Instance.EventOccurance = true;
                 GameStateManager.Instance.VillainMoving = 0;
-                Debug.Log("Player Pos " + transform.position);
+                
+                // SFX
+                AudioClip clip = Resources.Load<AudioClip>(HERO_DEATH_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
             }
 
             // Check if on top of switch tile
@@ -103,6 +115,12 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
                     if (changeTileScript != null)
                     {
                         changeTileScript.deleteTile(transform.position);
+                        // SFX
+                        AudioClip clip = Resources.Load<AudioClip>(SWITCH_PRESS_SFX_FILEPATH);
+                        AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                        audioSource.clip = clip;
+                        audioSource.volume = 0.3f;
+                        audioSource.Play();
                     }
                 }
             }
@@ -122,10 +140,17 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
                         MovePoint.position = transform.position;
                         break;
                 }
+
+                // SFX
+                 AudioClip clip = Resources.Load<AudioClip>(TELEPORT_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
             }
 
             // Check if on top of a swap tile
-            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Swap")))
+            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Swap")) || Physics2D.OverlapPoint(new Vector3(villain.transform.position.x, villain.transform.position.y), LayerMask.GetMask("Swap")))
             {   
                 Vector3 HeroPosition = transform.position;
                 Vector3 HeroMovePoint = MovePoint.position;
@@ -133,27 +158,21 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
                 villainMovePoint.position = HeroMovePoint;
                 transform.position = villain.transform.position;
                 villain.transform.position = HeroPosition;
+                // SFX
+                 AudioClip clip = Resources.Load<AudioClip>(SWAP_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
             }
 
             // Check if on top of timed door switch
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Timer")))
             {
-                isOpen = true;
-                timedDoor.SetActive(false);
+                DoorActivate timedDoor = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Timer")).GetComponent<DoorActivate>();
+                timedDoor.ActivateSwitch(false);
             }
         }
-
-        // If the timed door is open reduce the timer until it is closed
-        if (isOpen)
-            {
-                timer -= Time.deltaTime;
-                if (timer <= 0f)
-                {
-                    timer = 2f;
-                    isOpen = false;
-                    timedDoor.SetActive(true);
-                }
-            }
 
         // If hero dead, don't do anything
         if(GameStateManager.Instance.EventOccurance)
@@ -193,8 +212,6 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
     {
         transform.position = coord;
         MovePoint.position = coord;
-
-        if(coord == startPos) gameObject.active = false;
 
         if(isDead)
         {
