@@ -2851,7 +2851,6 @@ MonoBehaviour:
   initTile: {fileID: 11400000, guid: c284b9b57503b5343a7f29193f92a293, type: 2}
   newTile: {fileID: 11400000, guid: 7469e2c1e66768243884776acabf28d5, type: 2}
   InitTurn: 0
-  tileToFind: {fileID: 0}
 --- !u!82 &773566401
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4465,7 +4464,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 4d57db0f590adf14a912a5faacda195b, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.49019608}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -9210,8 +9209,8 @@ MonoBehaviour:
   villainMovePoint: {fileID: 773559576}
   vclone: {fileID: 1552202371}
   vcloneMovePoint: {fileID: 1318884347}
-  orangeTile: {fileID: 0}
-  blueTile: {fileID: 0}
+  orangeTile: {fileID: 499497997}
+  blueTile: {fileID: 1827325094}
   duplicationDestination: {fileID: 1087969244}
   duplicate: {fileID: 132073479}
   animator: {fileID: 2133987809}
