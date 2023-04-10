@@ -19,6 +19,7 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
     public GameObject blueTile;
     private Vector3 orangePosition;
     private Vector3 bluePosition;
+    private bool invertedActive = false;
 
     public Animator animator;
     
@@ -26,6 +27,7 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
     private const string SWITCH_PRESS_SFX_FILEPATH = "SFX/Magic2";
     private const string SWAP_SFX_FILEPATH = "SFX/Spirit";
     private const string TELEPORT_SFX_FILEPATH = "SFX/PowerUp1";
+    private const string INVERT_SFX_FILEPATH = "SFX/Hit2";
 
     // Start is called before the first frame update
     void Start()
@@ -44,8 +46,16 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
         // Check if space is free, move on if so
         if (GameStateManager.Instance.HeroCloneMoving > 0 || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
-            animator.SetBool("isMoving", true);
+            if (!invertedActive) {
+                transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
+            }
+            else
+            {
+                Vector3 oppositeDirection = new Vector3(-Input.GetAxisRaw("Horizontal"), -Input.GetAxisRaw("Vertical"), 0f);
+                MovePoint.position = transform.position + oppositeDirection;
+                transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
+            }
+            animator.SetBool("isMoving", true);   
         }
         else animator.SetBool("isMoving", false);
 
@@ -89,7 +99,7 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
             }
             
             // Check if on top of death tile
-            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Player_Villain")))
+            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Hero_Enemy")) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Neutral_Enemy")))
             {
                 deadScreenUI.SetActive(true);
                 isDead = true;
@@ -171,6 +181,22 @@ public class CloneHeroMovement : MonoBehaviour, InterfaceUndo
             {
                 DoorActivate timedDoor = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Timer")).GetComponent<DoorActivate>();
                 timedDoor.ActivateSwitch(false);
+            }
+
+             // Check if on top of a control inverter tile
+            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Invert"))) {
+                if (invertedActive) {
+                    invertedActive = false;
+                }
+                else {
+                    invertedActive = true;
+                }
+                // SFX
+                AudioClip clip = Resources.Load<AudioClip>(INVERT_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
             }
         }
 

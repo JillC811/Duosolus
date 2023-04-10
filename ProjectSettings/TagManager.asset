@@ -22,10 +22,10 @@ TagManager:
   - Swap
   - Duplicator
   - Timer
-  - 
-  - 
-  - 
-  - 
+  - Invert
+  - Neutral_Enemy
+  - Hero_Enemy
+  - Villain_Enemy
   - 
   - 
   - 

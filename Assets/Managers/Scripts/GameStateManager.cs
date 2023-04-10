@@ -33,10 +33,16 @@ public class GameStateManager : MonoBehaviour
     public bool Cleared = false;
     public bool heroDuplicateActive = false;
     public bool villainDuplicateActive = false;
+    public bool skeletonActive = false;
+    public bool cyclopeActive = false;
+    public bool cyclope2Active = false;
     public int HeroMoving = 0;
     public int VillainMoving = 0;
     public int HeroCloneMoving = 0;
     public int VillainCloneMoving = 0;
+    public int SkeletonMoving = 0;
+    public int CyclopeMoving = 0;
+    public int Cyclope2Moving = 0;
     public GameObject clearScreenUI;
 
     public int TurnCount = 0;
@@ -58,79 +64,376 @@ public class GameStateManager : MonoBehaviour
     void Update() {
 
         // Check if players moved, update PlayerMoving variable accordingly
-        if (heroDuplicateActive) {
-            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && HeroCloneMoving == 0) 
-            {
-            // Check for Timed Doors
-            for(int i = 0; i < SwitchTime.Count; i++)
-            {
-                if(SwitchTime[i] == TurnCount)
+        if (skeletonActive) {
+            if (heroDuplicateActive) {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && HeroCloneMoving == 0 && SkeletonMoving == 0) 
                 {
-                    SwitchObject[i].ResetSwitch();
-                    SwitchObject.RemoveAt(i);
-                    SwitchTime.RemoveAt(i);
-                    i--;
-                }
-            }
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
 
-            PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
-            PlayerMoving = false;
-            TurnCount++;
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
+                }
+                else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || HeroCloneMoving > 0 || SkeletonMoving > 0))
+                {
+                    PlayerMoving = true;
+                } 
+            }
+            else if (villainDuplicateActive) {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && VillainCloneMoving == 0 && SkeletonMoving == 0)
+                {
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
+                }
+                else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || VillainCloneMoving > 0 || SkeletonMoving > 0))
+                {
+                    PlayerMoving = true;
+                } 
+            }
+            else {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && SkeletonMoving == 0)
+                {
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
+                }
+                else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || SkeletonMoving > 0))
+                {
+                    PlayerMoving = true;
+                } 
+            }
+        }
+        else if (cyclopeActive) {
+            if (heroDuplicateActive) {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && HeroCloneMoving == 0 && CyclopeMoving == 0) 
+                {
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
+                }
+                else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || HeroCloneMoving > 0 || CyclopeMoving > 0))
+                {
+                    PlayerMoving = true;
+                } 
+            }
+            else if (villainDuplicateActive) {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && VillainCloneMoving == 0 && CyclopeMoving == 0)
+                {
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
+                }
+                else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || VillainCloneMoving > 0 || CyclopeMoving > 0))
+                {
+                    PlayerMoving = true;
+                } 
+            }
+            else {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && CyclopeMoving == 0)
+                {
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
+                }
+                else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || CyclopeMoving > 0))
+                {
+                    PlayerMoving = true;
+                } 
+            }
+        } 
+        else if (cyclope2Active) {
+            if (heroDuplicateActive) {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && HeroCloneMoving == 0 && Cyclope2Moving == 0) 
+                {
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
+                }
+                else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || HeroCloneMoving > 0 || Cyclope2Moving > 0))
+                {
+                    PlayerMoving = true;
+                } 
+            }
+            else if (villainDuplicateActive) {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && VillainCloneMoving == 0 && Cyclope2Moving == 0)
+                {
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
+                }
+                else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || VillainCloneMoving > 0 || Cyclope2Moving > 0))
+                {
+                    PlayerMoving = true;
+                } 
+            }
+            else {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && Cyclope2Moving == 0)
+                {
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
+                }
+                else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || Cyclope2Moving > 0))
+                {
+                    PlayerMoving = true;
+                } 
+            }
+        }
+        else {
+            if (heroDuplicateActive) {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && HeroCloneMoving == 0) 
+                {
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
+
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
             }
             else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || HeroCloneMoving > 0))
             {
                 PlayerMoving = true;
             } 
-        }
-        else if (villainDuplicateActive) {
-            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && VillainCloneMoving == 0)
-            {
-            // Check for Timed Doors
-            for(int i = 0; i < SwitchTime.Count; i++)
-            {
-                if(SwitchTime[i] == TurnCount)
+            }
+            else if (villainDuplicateActive) {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && VillainCloneMoving == 0)
                 {
-                    SwitchObject[i].ResetSwitch();
-                    SwitchObject.RemoveAt(i);
-                    SwitchTime.RemoveAt(i);
-                    i--;
-                }
-            }
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
 
-            PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
-            PlayerMoving = false;
-            TurnCount++;
-            }
-            else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || VillainCloneMoving > 0))
-            {
-                PlayerMoving = true;
-            } 
-        }
-        else {
-            if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0)
-            {
-            // Check for Timed Doors
-            for(int i = 0; i < SwitchTime.Count; i++)
-            {
-                if(SwitchTime[i] == TurnCount)
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
+                }
+                else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || VillainCloneMoving > 0))
                 {
-                    SwitchObject[i].ResetSwitch();
-                    SwitchObject.RemoveAt(i);
-                    SwitchTime.RemoveAt(i);
-                    i--;
-                }
+                    PlayerMoving = true;
+                } 
             }
+            else {
+                if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0)
+                {
+                    // Check for Timed Doors
+                    for(int i = 0; i < SwitchTime.Count; i++)
+                    {
+                        if(SwitchTime[i] == TurnCount)
+                        {
+                            SwitchObject[i].ResetSwitch();
+                            SwitchObject.RemoveAt(i);
+                            SwitchTime.RemoveAt(i);
+                            i--;
+                        }
+                    }
 
-            PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
-            PlayerMoving = false;
-            TurnCount++;
+                    PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+                    PlayerMoving = false;
+                    TurnCount++;
+                }
+                else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0))
+                {
+                    PlayerMoving = true;
+                } 
             }
-            else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0))
-            {
-                PlayerMoving = true;
-            } 
         }
         
+        
+        // if (heroDuplicateActive) {
+        //     if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && HeroCloneMoving == 0) 
+        //     {
+        //     // Check for Timed Doors
+        //     for(int i = 0; i < SwitchTime.Count; i++)
+        //     {
+        //         if(SwitchTime[i] == TurnCount)
+        //         {
+        //             SwitchObject[i].ResetSwitch();
+        //             SwitchObject.RemoveAt(i);
+        //             SwitchTime.RemoveAt(i);
+        //             i--;
+        //         }
+        //     }
+
+        //     PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+        //     PlayerMoving = false;
+        //     TurnCount++;
+        //     }
+        //     else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || HeroCloneMoving > 0))
+        //     {
+        //         PlayerMoving = true;
+        //     } 
+        //     }
+        //     else if (villainDuplicateActive) {
+        //         if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0 && VillainCloneMoving == 0)
+        //         {
+        //         // Check for Timed Doors
+        //         for(int i = 0; i < SwitchTime.Count; i++)
+        //         {
+        //             if(SwitchTime[i] == TurnCount)
+        //             {
+        //                 SwitchObject[i].ResetSwitch();
+        //                 SwitchObject.RemoveAt(i);
+        //                 SwitchTime.RemoveAt(i);
+        //                 i--;
+        //             }
+        //         }
+
+        //         PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+        //         PlayerMoving = false;
+        //         TurnCount++;
+        //         }
+        //         else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0 || VillainCloneMoving > 0))
+        //         {
+        //             PlayerMoving = true;
+        //         } 
+        //     }
+        //     else {
+        //         if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0)
+        //         {
+        //         // Check for Timed Doors
+        //         for(int i = 0; i < SwitchTime.Count; i++)
+        //         {
+        //             if(SwitchTime[i] == TurnCount)
+        //             {
+        //                 SwitchObject[i].ResetSwitch();
+        //                 SwitchObject.RemoveAt(i);
+        //                 SwitchTime.RemoveAt(i);
+        //                 i--;
+        //             }
+        //         }
+
+        //         PreviousMoves.Push(new History(null, new Vector3(0f, 0f, 0f)));
+        //         PlayerMoving = false;
+        //         TurnCount++;
+        //         }
+        //         else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0))
+        //         {
+        //             PlayerMoving = true;
+        //         } 
+        //     }
 
         // Undo
         if(!PlayerMoving && !Cleared && Input.GetKeyDown(KeyCode.Backspace))

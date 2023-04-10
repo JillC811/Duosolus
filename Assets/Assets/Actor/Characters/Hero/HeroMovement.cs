@@ -23,6 +23,7 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     private Vector3 bluePosition;
     public GameObject duplicationDestination;
     public GameObject duplicate;
+    private bool invertedActive = false;
 
     public Animator animator;
     
@@ -30,6 +31,7 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     private const string SWITCH_PRESS_SFX_FILEPATH = "SFX/Magic2";
     private const string SWAP_SFX_FILEPATH = "SFX/Spirit";
     private const string TELEPORT_SFX_FILEPATH = "SFX/PowerUp1";
+    private const string INVERT_SFX_FILEPATH = "SFX/Hit2";
 
     // Start is called before the first frame update
     void Start()
@@ -46,13 +48,20 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     void Update()
     {
         // Check if space is free, move on if so
-        if (GameStateManager.Instance.HeroMoving > 0 || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
-            animator.SetBool("isMoving", true);
+        if (GameStateManager.Instance.HeroMoving > 0 || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f) {
+            if (!invertedActive) {
+                transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
+            }
+            else
+            {
+                Vector3 oppositeDirection = new Vector3(-Input.GetAxisRaw("Horizontal"), -Input.GetAxisRaw("Vertical"), 0f);
+                MovePoint.position = transform.position + oppositeDirection;
+                transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
+            }
+            animator.SetBool("isMoving", true);   
         }
         else animator.SetBool("isMoving", false);
-
+        
          //Animation Purpose
         if (MovePoint.position.y > transform.position.y)
             animator.SetInteger("direction", 2);
@@ -93,7 +102,7 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             }
             
             // Check if on top of death tile
-            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Player_Villain")))
+            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Hero_Enemy")) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Neutral_Enemy")))
             {
                 deadScreenUI.SetActive(true);
                 isDead = true;
@@ -190,10 +199,10 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 GameObject obj = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Duplicator")).gameObject;
                 GameStateManager.Instance.heroDuplicateActive = true;
                 duplicate.SetActive(true);
-
                 obj.SetActive(false);
                 GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(obj, obj.transform.position));
                 duplicationDestination.SetActive(false);
+                Debug.Log("yurrr");
             }
 
             // Check if on top of timed door switch
@@ -201,6 +210,22 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             {
                 DoorActivate timedDoor = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Timer")).GetComponent<DoorActivate>();
                 timedDoor.ActivateSwitch(false);
+            }
+
+            // Check if on top of a control inverter tile
+            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Invert"))) {
+                if (invertedActive) {
+                    invertedActive = false;
+                }
+                else {
+                    invertedActive = true;
+                }
+                // SFX
+                AudioClip clip = Resources.Load<AudioClip>(INVERT_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
             }
         }
 
