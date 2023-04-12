@@ -22,8 +22,8 @@ TagManager:
   - Swap
   - Duplicator
   - Timer
-  - 
-  - 
+  - Invert
+  - Enemy
   - 
   - 
   - 
@@ -47,4 +47,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 3432546599
+    locked: 0
+  - name: Enemy
+    uniqueID: 2997550439
     locked: 0

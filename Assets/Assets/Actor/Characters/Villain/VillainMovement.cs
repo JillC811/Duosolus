@@ -13,15 +13,15 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
     public GameObject blueTile;
     private Vector3 orangePosition;
     private Vector3 bluePosition;
-    public GameObject duplicationDestination; 
-    public GameObject duplicate; 
-    private bool isOpen = false;
+    public GameObject duplicationDestination;
+    private bool invertedActive = false; 
 
     public Animator animator;
 
     private const string VILLAIN_DEATH_SFX_FILEPATH = "SFX/Success3";
     private const string SWAP_SFX_FILEPATH = "SFX/Spirit";
     private const string TELEPORT_SFX_FILEPATH = "SFX/PowerUp1";
+    private const string INVERT_SFX_FILEPATH = "SFX/Hit2";
     
 
     // Start is called before the first frame update
@@ -30,8 +30,8 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
         MovePoint.parent = null;
         animator = GetComponent<Animator>();
 
-        orangePosition = orangeTile.transform.position;
-        bluePosition = blueTile.transform.position;
+        if(orangeTile != null) orangePosition = orangeTile.transform.position;
+        if(blueTile != null) bluePosition = blueTile.transform.position;
     }
 
     // Update is called once per frame
@@ -46,10 +46,10 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
         }
 
         // Check if space is free, move on if so
-        if (GameStateManager.Instance.VillainMoving > 0 || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
+        if (GameStateManager.Instance.ObjectsInMotion.ContainsKey(gameObject) || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
         {
             transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
-            animator.SetBool("isMoving", true);
+            animator.SetBool("isMoving", true);   
         }
         else animator.SetBool("isMoving", false);
 
@@ -63,9 +63,9 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
         else if (MovePoint.position.x < transform.position.x) animator.SetInteger("direction", 1);
 
         // Check if instance is done moving
-        if(transform.position == MovePoint.position && GameStateManager.Instance.VillainMoving > 0)
+        if(transform.position == MovePoint.position && GameStateManager.Instance.ObjectsInMotion.ContainsKey(gameObject))
         {
-            GameStateManager.Instance.VillainMoving = 0;
+            GameStateManager.Instance.ObjectsInMotion.Remove(gameObject);
 
             // Check if on top of oneway
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Oneway")))
@@ -93,7 +93,7 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
             }
             
             // Check if on top of death tile
-            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) && !GameStateManager.Instance.EventOccurance)
+            if((Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Villain_Enemy")) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Neutral_Enemy"))) && !GameStateManager.Instance.EventOccurance)
             {
                 animator.SetBool("isDead", true);
                 GameStateManager.Instance.EventOccurance = true;
@@ -138,7 +138,7 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
                 }
 
                 // SFX
-                 AudioClip clip = Resources.Load<AudioClip>(TELEPORT_SFX_FILEPATH);
+                AudioClip clip = Resources.Load<AudioClip>(TELEPORT_SFX_FILEPATH);
                 AudioSource audioSource = gameObject.AddComponent<AudioSource>();
                 audioSource.clip = clip;
                 audioSource.volume = 0.3f;
@@ -149,12 +149,17 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Duplicator")))
             {
                 GameObject obj = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Duplicator")).gameObject;
-                GameStateManager.Instance.villainDuplicateActive = true;
-                duplicate.SetActive(true);
+                GameObject duplicate = Instantiate(gameObject);
+                duplicate.transform.position = duplicationDestination.transform.position;
 
-                obj.SetActive(false);
-                GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(obj, obj.transform.position));
-                duplicationDestination.SetActive(false);
+                GameObject duplicateMP = Instantiate(MovePoint.gameObject);
+                duplicateMP.transform.position = duplicate.transform.position;
+                
+                VillainMovement vm = duplicate.GetComponent<VillainMovement>();
+                Transform vt = duplicateMP.GetComponent<Transform>();
+                vm.MovePoint = vt;  
+
+                GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(duplicate, new Vector3(-1, -1, -1)));
             }
 
             // Check if on top of timed door switch
@@ -163,6 +168,23 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
                 DoorActivate timedDoor = Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Timer")).GetComponent<DoorActivate>();
                 timedDoor.ActivateSwitch(false);
             }
+
+             // Check if on top of a control inverter tile
+            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Invert"))) {
+                invertedActive = !invertedActive;
+                // SFX
+                AudioClip clip = Resources.Load<AudioClip>(INVERT_SFX_FILEPATH);
+                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.clip = clip;
+                audioSource.volume = 0.3f;
+                audioSource.Play();
+            }
+        }
+
+        // If hero dead, don't do anything
+        if(GameStateManager.Instance.EventOccurance)
+        {
+            return;
         }
 
         if(!GameStateManager.Instance.PlayerMoving)
@@ -170,21 +192,21 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
             if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
             {
                 // Not wall
-                if(!Physics2D.OverlapPoint(transform.position + new Vector3(Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f), Wall))
+                if(!Physics2D.OverlapPoint(transform.position + new Vector3((invertedActive?-1:1) * Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f), Wall))
                 {
-                    GameStateManager.Instance.VillainMoving += 1;
+                    GameStateManager.Instance.ObjectsInMotion.Add(gameObject, 2);
                     GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(this.gameObject, transform.position));
-                    MovePoint.position += new Vector3(Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f);
+                    MovePoint.position += new Vector3((invertedActive?-1:1) * Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f);
                 }
             }
 
             else if(Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
             {
-                if(!Physics2D.OverlapPoint(transform.position + new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f), Wall))
+                if(!Physics2D.OverlapPoint(transform.position + new Vector3(0f, (invertedActive?-1:1) * Input.GetAxisRaw("Vertical")*0.16f, 0f), Wall))
                 {
-                    GameStateManager.Instance.VillainMoving += 1;
+                    GameStateManager.Instance.ObjectsInMotion.Add(gameObject, 2);
                     GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(this.gameObject, transform.position));
-                    MovePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f);
+                    MovePoint.position += new Vector3(0f, (invertedActive?-1:1) * Input.GetAxisRaw("Vertical")*0.16f, 0f);
                 }
             }
 
@@ -195,6 +217,13 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
     // Undo last move, called by GameStateManager
     public void undo(Vector3 coord)
     {
+        if(coord.x == -1 && coord.y == -1 && coord.z == -1)
+        {
+            Destroy(MovePoint.gameObject);
+            Destroy(gameObject);
+            return;
+        }
+
         transform.position = coord;
         MovePoint.position = coord;
     }

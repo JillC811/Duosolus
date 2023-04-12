@@ -26,6 +26,7 @@ public class GameStateManager : MonoBehaviour
     public Stack<History> PreviousMoves = new Stack<History>();
     public List<DoorActivate> SwitchObject = new List<DoorActivate>();
     public List<int> SwitchTime = new List<int>();
+    public List<GameObject> MonsterList = new List<GameObject>();
 
     public bool EventOccurance = false;
     public bool GameIsPaused = false;
@@ -33,10 +34,15 @@ public class GameStateManager : MonoBehaviour
     public bool Cleared = false;
     public bool heroDuplicateActive = false;
     public bool villainDuplicateActive = false;
-    public int HeroMoving = 0;
-    public int VillainMoving = 0;
-    public int HeroCloneMoving = 0;
-    public int VillainCloneMoving = 0;
+    public bool skeletonActive = false;
+    public bool cyclopeActive = false;
+    public bool cyclope2Active = false;
+
+    public Dictionary<GameObject, int> ObjectsInMotion = new Dictionary<GameObject, int>();
+    
+    public int SkeletonMoving = 0;
+    public int CyclopeMoving = 0;
+    public int Cyclope2Moving = 0;
     public GameObject clearScreenUI;
 
     public int TurnCount = 0;
@@ -58,7 +64,7 @@ public class GameStateManager : MonoBehaviour
     void Update() {
 
         // Check if players moved, update PlayerMoving variable accordingly
-        if (PlayerMoving && HeroMoving == 0 && VillainMoving == 0)
+        if (PlayerMoving && ObjectsInMotion.Count == 0) 
         {
             // Check for Timed Doors
             for(int i = 0; i < SwitchTime.Count; i++)
@@ -76,25 +82,24 @@ public class GameStateManager : MonoBehaviour
             PlayerMoving = false;
             TurnCount++;
         }
-        else if (!PlayerMoving && (HeroMoving > 0 || VillainMoving > 0))
+        else if (!PlayerMoving && ObjectsInMotion.Count > 0)
         {
             PlayerMoving = true;
-        } 
 
+            // Move Monsters
+            foreach(GameObject m in MonsterList)
+            {
+                MonsterMovement mmove = m.GetComponent<MonsterMovement>();
+                mmove.Move();
+            }
+        }
         
-
         // Undo
         if(!PlayerMoving && !Cleared && Input.GetKeyDown(KeyCode.Backspace))
         {
             if(PreviousMoves.Count > 0)
             {
-                foreach (History item in PreviousMoves)
-                {
-                    Debug.Log(item.target);
-                }
-
                 History hist = PreviousMoves.Pop();
-                Debug.Log("Deleted " + hist.target);
                 hist = PreviousMoves.Pop();
                 
                 do
