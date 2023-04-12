@@ -370,10 +370,16 @@ MonoBehaviour:
   Cleared: 0
   heroDuplicateActive: 0
   villainDuplicateActive: 0
+  skeletonActive: 0
+  cyclopeActive: 0
+  cyclope2Active: 0
   HeroMoving: 0
   VillainMoving: 0
   HeroCloneMoving: 0
   VillainCloneMoving: 0
+  SkeletonMoving: 0
+  CyclopeMoving: 0
+  Cyclope2Moving: 0
   clearScreenUI: {fileID: 1124315586}
   TurnCount: 0
 --- !u!4 &63437731
@@ -3805,7 +3811,7 @@ MonoBehaviour:
   pauseMenuUI: {fileID: 1084287940}
   deadScreenUI: {fileID: 2083454558}
   settingsMenuUI: {fileID: 586231221}
-  wasPaused: 1
+  wasPaused: 0
 --- !u!114 &1222949498
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -8,4 +8,11 @@ public class ClearScreen : MonoBehaviour
 
     void Start() {
     }
+
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GameStateManager.Instance.LoadMap();
+        }
+    }
 }

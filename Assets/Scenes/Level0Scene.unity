@@ -429,10 +429,12 @@ MonoBehaviour:
   Cleared: 0
   heroDuplicateActive: 0
   villainDuplicateActive: 0
-  HeroMoving: 0
-  VillainMoving: 0
-  HeroCloneMoving: 0
-  VillainCloneMoving: 0
+  skeletonActive: 0
+  cyclopeActive: 0
+  cyclope2Active: 0
+  SkeletonMoving: 0
+  CyclopeMoving: 0
+  Cyclope2Moving: 0
   clearScreenUI: {fileID: 1124315586}
   TurnCount: 0
 --- !u!4 &63437731
@@ -1069,7 +1071,6 @@ MonoBehaviour:
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
-  duplicate: {fileID: 0}
   animator: {fileID: 0}
 --- !u!50 &318321155
 Rigidbody2D:
@@ -1777,7 +1778,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 731934933}
-  - component: {fileID: 731934929}
   - component: {fileID: 731934932}
   - component: {fileID: 731934931}
   - component: {fileID: 731934930}
@@ -1788,18 +1788,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &731934929
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 731934928}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6903ff23357d1a4e8c666a260e2f8ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &731934930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5455,6 +5443,7 @@ GameObject:
   - component: {fileID: 1591640911}
   - component: {fileID: 1591640910}
   - component: {fileID: 1591640909}
+  - component: {fileID: 1591640912}
   m_Layer: 5
   m_Name: MapButton
   m_TagString: Untagged
@@ -5577,6 +5566,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1591640907}
   m_CullTransparentMesh: 1
+--- !u!114 &1591640912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591640907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6903ff23357d1a4e8c666a260e2f8ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1616435723
 GameObject:
   m_ObjectHideFlags: 0
@@ -8326,14 +8327,9 @@ MonoBehaviour:
     m_Bits: 0
   changeTileScript: {fileID: 299270322}
   deadScreenUI: {fileID: 2083454558}
-  villain: {fileID: 0}
-  villainMovePoint: {fileID: 0}
-  vclone: {fileID: 0}
-  vcloneMovePoint: {fileID: 0}
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
-  duplicate: {fileID: 0}
   animator: {fileID: 2100117391}
 --- !u!50 &2100117388
 Rigidbody2D:
