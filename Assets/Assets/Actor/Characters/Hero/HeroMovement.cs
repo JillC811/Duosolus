@@ -13,16 +13,11 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     public LayerMask Villain;
     public ChangeTile changeTileScript;
     public GameObject deadScreenUI;
-    public GameObject villain; 
-    public Transform villainMovePoint;
-    public GameObject vclone; 
-    public Transform vcloneMovePoint;
     public GameObject orangeTile;
     public GameObject blueTile;
     private Vector3 orangePosition;
     private Vector3 bluePosition;
     public GameObject duplicationDestination;
-    public GameObject duplicate;
     private bool invertedActive = false;
 
     public Animator animator;
@@ -36,33 +31,30 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     // Start is called before the first frame update
     void Start()
     {
-        MovePoint.parent = null;
         animator = GetComponent<Animator>();
 
-        orangePosition = orangeTile.transform.position;
-        bluePosition = blueTile.transform.position;
+        if(orangeTile != null) orangePosition = orangeTile.transform.position;
+        if(blueTile != null) bluePosition = blueTile.transform.position;
 
+        // Free the MovePoint
+        MovePoint.parent = null;    
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Check if space is free, move on if so
-        if (GameStateManager.Instance.HeroMoving > 0 || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f) {
-            if (!invertedActive) {
-                transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
-            }
-            else
-            {
-                Vector3 oppositeDirection = new Vector3(-Input.GetAxisRaw("Horizontal"), -Input.GetAxisRaw("Vertical"), 0f);
-                MovePoint.position = transform.position + oppositeDirection;
-                transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
-            }
+        // Check if this object is considered in motion, check if any arrow keys are pressed
+        if (GameStateManager.Instance.ObjectsInMotion.ContainsKey(gameObject) || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f) {
+            Debug.Log(MovePoint.position);
+            // Move the object towards "MovePoint" object
+            transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
+            // Set the animation variable to true
             animator.SetBool("isMoving", true);   
         }
-        else animator.SetBool("isMoving", false);
+        else animator.SetBool("isMoving", false); // Else set the animation variable to false to disable animation
         
-         //Animation Purpose
+        //Animation Purpose DON'T TOUCH
         if (MovePoint.position.y > transform.position.y)
             animator.SetInteger("direction", 2);
         else if (MovePoint.position.y < transform.position.y) animator.SetInteger("direction", 0);
@@ -72,9 +64,9 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
         else if (MovePoint.position.x < transform.position.x) animator.SetInteger("direction", 1);
 
         // Check if instance is done moving
-        if(transform.position == MovePoint.position && GameStateManager.Instance.HeroMoving > 0)
+        if(transform.position == MovePoint.position && GameStateManager.Instance.ObjectsInMotion.ContainsKey(gameObject))
         {
-            GameStateManager.Instance.HeroMoving = 0;
+            GameStateManager.Instance.ObjectsInMotion.Remove(gameObject);
 
             // Check if on top of oneway
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Oneway")))
@@ -108,7 +100,8 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 isDead = true;
                 animator.SetBool("isDead", true);
                 GameStateManager.Instance.EventOccurance = true;
-                GameStateManager.Instance.VillainMoving = 0;
+                GameStateManager.Instance.ObjectsInMotion.Clear();
+                // GameStateManager.Instance.VillainMoving = 0;
                 
                 // SFX
                 AudioClip clip = Resources.Load<AudioClip>(HERO_DEATH_SFX_FILEPATH);
@@ -163,46 +156,66 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             }
 
             // Check if on top of a swap tile
-            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Swap")) || Physics2D.OverlapPoint(new Vector3(villain.transform.position.x, villain.transform.position.y), LayerMask.GetMask("Swap")))
+            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Swap")))
             {   
-                Vector3 HeroPosition = transform.position;
-                Vector3 HeroMovePoint = MovePoint.position;
-                MovePoint.position = villainMovePoint.position;
-                villainMovePoint.position = HeroMovePoint;
-                transform.position = villain.transform.position;
-                villain.transform.position = HeroPosition;
-                // SFX
-                AudioClip clip = Resources.Load<AudioClip>(SWAP_SFX_FILEPATH);
-                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
-                audioSource.clip = clip;
-                audioSource.volume = 0.3f;
-                audioSource.Play();
-            }
-            if(GameStateManager.Instance.villainDuplicateActive && Physics2D.OverlapPoint(new Vector3(vclone.transform.position.x, vclone.transform.position.y), LayerMask.GetMask("Swap"))) {
-                Vector3 HeroPosition = transform.position;
-                Vector3 HeroMovePoint = MovePoint.position;
-                MovePoint.position = vcloneMovePoint.position;
-                vcloneMovePoint.position = HeroMovePoint;
-                transform.position = vclone.transform.position;
-                vclone.transform.position = HeroPosition;
-                // SFX
-                AudioClip clip = Resources.Load<AudioClip>(SWAP_SFX_FILEPATH);
-                AudioSource audioSource = gameObject.AddComponent<AudioSource>();
-                audioSource.clip = clip;
-                audioSource.volume = 0.3f;
-                audioSource.Play();
+                GameObject[] villains = GameObject.FindGameObjectsWithTag("Player_Villain");
+                float minDistance = Mathf.Infinity;
+                GameObject closestVillain = null;
+                Vector3 currentPosition = transform.position;
+
+                foreach (GameObject villain in villains) {
+                    float distance = Vector3.Distance(villain.transform.position, currentPosition);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestVillain = villain;
+                    }
+                }
+
+                if (closestVillain != null) {
+                    Vector3 HeroPosition = transform.position;
+                    Vector3 HeroMovePoint = MovePoint.position;
+                    MovePoint.position = closestVillain.transform.position;
+                    closestVillain.transform.position = HeroMovePoint;
+                    transform.position = closestVillain.transform.position;
+                    closestVillain.transform.position = HeroPosition;
+                    
+                    // SFX
+                    AudioClip clip = Resources.Load<AudioClip>(SWAP_SFX_FILEPATH);
+                    AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                    audioSource.clip = clip;
+                    audioSource.volume = 0.3f;
+                    audioSource.Play();
+                }
+
+
+                
             }
 
             // Check if on top of a duplicator
+            
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Duplicator")))
             {
                 GameObject obj = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Duplicator")).gameObject;
-                GameStateManager.Instance.heroDuplicateActive = true;
-                duplicate.SetActive(true);
-                obj.SetActive(false);
-                GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(obj, obj.transform.position));
-                duplicationDestination.SetActive(false);
-                Debug.Log("yurrr");
+                // Bug - duplicator works even when there's already an object at the destination
+                // if (Physics2D.OverlapPoint(new Vector2(duplicationDestination.transform.position.x, duplicationDestination.transform.position.y), LayerMask.GetMask("Player_Hero", "Player_Villain")) == null) 
+                if(true)
+                {
+                    Debug.Log(Physics2D.OverlapPoint(new Vector2(duplicationDestination.transform.position.x, duplicationDestination.transform.position.y), LayerMask.GetMask("Player_Hero", "Player_Villain")));
+
+                    GameObject duplicate = Instantiate(gameObject);
+                    duplicate.transform.position = duplicationDestination.transform.position;
+
+                    GameObject duplicateMP = Instantiate(MovePoint.gameObject);
+                    duplicateMP.transform.position = duplicate.transform.position;
+
+                    HeroMovement hm = duplicate.GetComponent<HeroMovement>();
+                    Transform ht = duplicateMP.GetComponent<Transform>();
+                    hm.MovePoint = ht;
+
+                    // obj.SetActive(false);
+                    
+                    GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(duplicate, new Vector3(-1, -1, -1)));
+                }
             }
 
             // Check if on top of timed door switch
@@ -214,12 +227,7 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
 
             // Check if on top of a control inverter tile
             if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Invert"))) {
-                if (invertedActive) {
-                    invertedActive = false;
-                }
-                else {
-                    invertedActive = true;
-                }
+                invertedActive = !invertedActive;
                 // SFX
                 AudioClip clip = Resources.Load<AudioClip>(INVERT_SFX_FILEPATH);
                 AudioSource audioSource = gameObject.AddComponent<AudioSource>();
@@ -240,21 +248,21 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             if(Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
             {
                 // Not wall
-                if(!Physics2D.OverlapPoint(transform.position + new Vector3(Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f), Wall))
+                if(!Physics2D.OverlapPoint(transform.position + new Vector3((invertedActive?-1:1) * Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f), Wall))
                 {
-                    GameStateManager.Instance.HeroMoving += 1;
+                    GameStateManager.Instance.ObjectsInMotion.Add(gameObject, 1);
                     GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(this.gameObject, transform.position));
-                    MovePoint.position += new Vector3(Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f);
+                    MovePoint.position += new Vector3((invertedActive?-1:1) * Input.GetAxisRaw("Horizontal")*0.16f, 0f, 0f);
                 }
             }
 
             else if(Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
             {
-                if(!Physics2D.OverlapPoint(transform.position + new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f), Wall))
+                if(!Physics2D.OverlapPoint(transform.position + new Vector3(0f, (invertedActive?-1:1) * Input.GetAxisRaw("Vertical")*0.16f, 0f), Wall))
                 {
-                    GameStateManager.Instance.HeroMoving += 1;
+                    GameStateManager.Instance.ObjectsInMotion.Add(gameObject, 1);
                     GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(this.gameObject, transform.position));
-                    MovePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical")*0.16f, 0f);
+                    MovePoint.position += new Vector3(0f, (invertedActive?-1:1) * Input.GetAxisRaw("Vertical")*0.16f, 0f);
                 }
             }
 
@@ -265,6 +273,13 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     // Undo last move, called by GameStateManager
     public void undo(Vector3 coord)
     {
+        if(coord.x == -1 && coord.y == -1 && coord.z == -1)
+        {
+            Destroy(MovePoint.gameObject);
+            Destroy(gameObject);
+            return;
+        }
+
         transform.position = coord;
         MovePoint.position = coord;
 
