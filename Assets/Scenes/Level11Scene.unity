@@ -297,10 +297,6 @@ MonoBehaviour:
   skeletonActive: 0
   cyclopeActive: 0
   cyclope2Active: 0
-  HeroMoving: 0
-  VillainMoving: 0
-  HeroCloneMoving: 0
-  VillainCloneMoving: 0
   SkeletonMoving: 0
   CyclopeMoving: 0
   Cyclope2Moving: 0
@@ -945,7 +941,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 318321151}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.56, z: 0}
+  m_LocalPosition: {x: -0.08, y: -0.56, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -977,7 +973,6 @@ MonoBehaviour:
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
-  duplicate: {fileID: 0}
   animator: {fileID: 0}
 --- !u!50 &318321155
 Rigidbody2D:
@@ -4511,7 +4506,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1228294203}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.008, y: -0.258, z: 1}
+  m_LocalPosition: {x: -0.08, y: -0.24, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9417,14 +9412,9 @@ MonoBehaviour:
     m_Bits: 256
   changeTileScript: {fileID: 299270322}
   deadScreenUI: {fileID: 2083454558}
-  villain: {fileID: 318321151}
-  villainMovePoint: {fileID: 276437629}
-  vclone: {fileID: 0}
-  vcloneMovePoint: {fileID: 0}
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
-  duplicate: {fileID: 0}
   animator: {fileID: 2100117391}
 --- !u!50 &2100117388
 Rigidbody2D:
@@ -9507,7 +9497,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100117386}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.56, z: 0}
+  m_LocalPosition: {x: -0.08, y: 0.56, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

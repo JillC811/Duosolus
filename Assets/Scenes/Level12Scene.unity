@@ -297,10 +297,6 @@ MonoBehaviour:
   skeletonActive: 0
   cyclopeActive: 0
   cyclope2Active: 0
-  HeroMoving: 0
-  VillainMoving: 0
-  HeroCloneMoving: 0
-  VillainCloneMoving: 0
   SkeletonMoving: 0
   CyclopeMoving: 0
   Cyclope2Moving: 0
@@ -965,7 +961,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 318321151}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.0789, z: 0}
+  m_LocalPosition: {x: -0.08, y: -0.0789, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -997,7 +993,6 @@ MonoBehaviour:
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
-  duplicate: {fileID: 0}
   animator: {fileID: 0}
 --- !u!50 &318321155
 Rigidbody2D:
@@ -6045,25 +6040,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 507b904e9ceef4cb4ae578b333ca3089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 1
-  isDead: 0
-  MovePoint: {fileID: 831868945}
-  Wall:
-    serializedVersion: 2
-    m_Bits: 64
-  Death:
-    serializedVersion: 2
-    m_Bits: 2048
-  Villain:
-    serializedVersion: 2
-    m_Bits: 256
-  changeTileScript: {fileID: 299270322}
-  deadScreenUI: {fileID: 2083454558}
-  villain: {fileID: 318321151}
-  villainMovePoint: {fileID: 276437629}
-  orangeTile: {fileID: 0}
-  blueTile: {fileID: 0}
-  animator: {fileID: 1561264999}
 --- !u!95 &1561264999
 Animator:
   serializedVersion: 5
@@ -9540,14 +9516,9 @@ MonoBehaviour:
     m_Bits: 256
   changeTileScript: {fileID: 299270322}
   deadScreenUI: {fileID: 2083454558}
-  villain: {fileID: 318321151}
-  villainMovePoint: {fileID: 276437629}
-  vclone: {fileID: 0}
-  vcloneMovePoint: {fileID: 0}
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 2113229778}
-  duplicate: {fileID: 1561264997}
   animator: {fileID: 2100117391}
 --- !u!50 &2100117388
 Rigidbody2D:
@@ -9630,7 +9601,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100117386}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.56, z: 0}
+  m_LocalPosition: {x: -0.08, y: 0.56, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

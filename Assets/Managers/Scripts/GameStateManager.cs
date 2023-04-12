@@ -26,6 +26,7 @@ public class GameStateManager : MonoBehaviour
     public Stack<History> PreviousMoves = new Stack<History>();
     public List<DoorActivate> SwitchObject = new List<DoorActivate>();
     public List<int> SwitchTime = new List<int>();
+    public List<GameObject> MonsterList = new List<GameObject>();
 
     public bool EventOccurance = false;
     public bool GameIsPaused = false;
@@ -84,22 +85,21 @@ public class GameStateManager : MonoBehaviour
         else if (!PlayerMoving && ObjectsInMotion.Count > 0)
         {
             PlayerMoving = true;
+
+            // Move Monsters
+            foreach(GameObject m in MonsterList)
+            {
+                MonsterMovement mmove = m.GetComponent<MonsterMovement>();
+                mmove.Move();
+            }
         }
         
         // Undo
-        if(Input.GetKeyDown(KeyCode.Backspace)) Debug.Log(PlayerMoving);
-
         if(!PlayerMoving && !Cleared && Input.GetKeyDown(KeyCode.Backspace))
         {
             if(PreviousMoves.Count > 0)
             {
-                foreach (History item in PreviousMoves)
-                {
-                    Debug.Log(item.target);
-                }
-
                 History hist = PreviousMoves.Pop();
-                Debug.Log("Deleted " + hist.target);
                 hist = PreviousMoves.Pop();
                 
                 do

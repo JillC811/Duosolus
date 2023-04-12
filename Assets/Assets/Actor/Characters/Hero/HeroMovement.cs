@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class HeroMovement : MonoBehaviour, InterfaceUndo
 {
-    public float MoveSpeed;
+    public float MoveSpeed = 1;
     public bool isDead = false;
     public Transform MovePoint;
     public LayerMask Wall;
@@ -46,7 +46,6 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
     {
         // Check if this object is considered in motion, check if any arrow keys are pressed
         if (GameStateManager.Instance.ObjectsInMotion.ContainsKey(gameObject) || Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f || Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f) {
-            Debug.Log(MovePoint.position);
             // Move the object towards "MovePoint" object
             transform.position = Vector3.MoveTowards(transform.position, MovePoint.position, MoveSpeed * Time.deltaTime);
             // Set the animation variable to true
@@ -94,7 +93,7 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             }
             
             // Check if on top of death tile
-            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Hero_Enemy")) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Neutral_Enemy")))
+            if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), Death) || Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Enemy")))
             {
                 deadScreenUI.SetActive(true);
                 isDead = true;
@@ -200,8 +199,6 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 // if (Physics2D.OverlapPoint(new Vector2(duplicationDestination.transform.position.x, duplicationDestination.transform.position.y), LayerMask.GetMask("Player_Hero", "Player_Villain")) == null) 
                 if(true)
                 {
-                    Debug.Log(Physics2D.OverlapPoint(new Vector2(duplicationDestination.transform.position.x, duplicationDestination.transform.position.y), LayerMask.GetMask("Player_Hero", "Player_Villain")));
-
                     GameObject duplicate = Instantiate(gameObject);
                     duplicate.transform.position = duplicationDestination.transform.position;
 
