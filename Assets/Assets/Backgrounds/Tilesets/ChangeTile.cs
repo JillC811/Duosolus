@@ -47,6 +47,9 @@ public class ChangeTile : MonoBehaviour, InterfaceUndo
             case 13:
                 switchToWall.Add(new Vector3Int(-2, -2, 0), new Vector3Int(-5, 1, 0));
                 break;
+            case 14:
+                switchToWall.Add(new Vector3Int(-4, 3, 0), new Vector3Int(1, 1, 0));
+                break;
 
         }
 

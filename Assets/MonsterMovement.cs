@@ -39,10 +39,6 @@ public class MonsterMovement : MonoBehaviour, InterfaceUndo
         if (vMove != 0) animator.SetInteger("direction", 1 + vMove);
         else if (hMove != 0) animator.SetInteger("direction", 2 + hMove);
 
-        if (MovePoint.position.x > transform.position.x)
-            animator.SetInteger("direction", 3);
-        else if (MovePoint.position.x < transform.position.x) animator.SetInteger("direction", 1);
-
         // Check if instance is done moving
         if(transform.position == MovePoint.position && GameStateManager.Instance.ObjectsInMotion.ContainsKey(gameObject))
         {
@@ -62,7 +58,8 @@ public class MonsterMovement : MonoBehaviour, InterfaceUndo
     {
         GameStateManager.Instance.ObjectsInMotion.Add(gameObject, 1);
         GameStateManager.Instance.PreviousMoves.Push(new GameStateManager.History(this.gameObject, transform.position));
-        MovePoint.position += new Vector3(hMove * 0.16f, vMove * 0.16f, 0f);
+        if(!Physics2D.OverlapPoint(new Vector3(transform.position.x + hMove*0.16f, transform.position.y + vMove*0.16f, 0f), LayerMask.GetMask("Wall"))) 
+            MovePoint.position += new Vector3(hMove * 0.16f, vMove * 0.16f, 0f);
     }
 
     // Undo last move, called by GameStateManager
