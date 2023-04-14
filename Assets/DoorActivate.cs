@@ -44,7 +44,7 @@ public class DoorActivate : MonoBehaviour, InterfaceUndo
     // Activate, undo is true if this function was called from undo function
     public void ActivateSwitch(bool fromundo)
     {
-        if(!Wall.active) return;
+        if(!Wall.activeSelf) return;
 
         // SFX
         // Load the audio clip from the "Resources" folder
