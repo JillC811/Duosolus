@@ -1,7 +1,5 @@
-# 226-game-design-project-11
+# Duosolus
 
-**Course Code:** CISC 226  
-**Group Number:** 11  
 **Game Name:** Duosolus  
 **Creators:** Jihoo Ahn, Mahir Khandokar, Joey Chong  
 **Professor:** Gabriele Cimolino  
