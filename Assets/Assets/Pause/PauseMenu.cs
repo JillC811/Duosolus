@@ -50,7 +50,7 @@ public class PauseMenu : MonoBehaviour
         GameStateManager.Instance.GameIsPaused = true;
 
         
-        if(deadScreenUI.active)
+        if(deadScreenUI.activeSelf)
         {
             deadScreenUI.SetActive(false);
             wasPaused = true;

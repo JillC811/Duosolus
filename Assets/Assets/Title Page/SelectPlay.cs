@@ -13,7 +13,8 @@ public class SelectPlay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && GetComponent<Collider2D>().OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition))) {
+        if (Input.GetKeyDown(KeyCode.Space) || (Input.GetMouseButtonDown(0) && GetComponent<Collider2D>().OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition))))
+        {
             GlobalGameStateManager.Instance.LoadData();
             SceneManager.LoadScene("IntroScene", LoadSceneMode.Single);
         }
