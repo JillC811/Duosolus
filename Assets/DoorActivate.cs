@@ -33,7 +33,6 @@ public class DoorActivate : MonoBehaviour, InterfaceUndo
                 }
             }
         }
-        Debug.Log(tilePosition);
     }
 
     // Update is called once per frame

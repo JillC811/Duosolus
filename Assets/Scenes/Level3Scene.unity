@@ -473,16 +473,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SwitchObject: []
   SwitchTime: 
+  MonsterList: []
   EventOccurance: 0
+  SwappedTurn: -1
   GameIsPaused: 0
   PlayerMoving: 0
   Cleared: 0
-  heroDuplicateActive: 0
-  villainDuplicateActive: 0
-  HeroMoving: 0
-  VillainMoving: 0
-  HeroCloneMoving: 0
-  VillainCloneMoving: 0
   clearScreenUI: {fileID: 1124315586}
   TurnCount: 0
 --- !u!4 &63437731
@@ -788,7 +784,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 205702115}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.4, y: 0.56, z: -2}
+  m_LocalPosition: {x: 0.4, y: 0.56, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1119,6 +1115,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 2025006582}
+  initTile: {fileID: 11400000, guid: e97f3d70603ae314a9ab77b2d4b87ff2, type: 2}
+  newTile: {fileID: 11400000, guid: 82bc297866b0c4845bfda91fefc7f161, type: 2}
 --- !u!1 &318321151
 GameObject:
   m_ObjectHideFlags: 0
@@ -1231,7 +1229,6 @@ MonoBehaviour:
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
-  duplicate: {fileID: 0}
   animator: {fileID: 0}
 --- !u!50 &318321155
 Rigidbody2D:
@@ -4449,8 +4446,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 704452123
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -6488,7 +6485,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1743777575}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.24, y: 0.4, z: -2}
+  m_LocalPosition: {x: 0.24, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7128,7 +7125,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1840940967}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.72, y: 0.4, z: -2}
+  m_LocalPosition: {x: 0.72, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9068,14 +9065,9 @@ MonoBehaviour:
     m_Bits: 0
   changeTileScript: {fileID: 299270322}
   deadScreenUI: {fileID: 2083454558}
-  villain: {fileID: 0}
-  villainMovePoint: {fileID: 0}
-  vclone: {fileID: 0}
-  vcloneMovePoint: {fileID: 0}
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
-  duplicate: {fileID: 0}
   animator: {fileID: 2100117391}
 --- !u!50 &2100117388
 Rigidbody2D:

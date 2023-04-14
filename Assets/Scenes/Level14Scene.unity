@@ -290,17 +290,10 @@ MonoBehaviour:
   SwitchTime: 
   MonsterList: []
   EventOccurance: 0
+  SwappedTurn: -1
   GameIsPaused: 0
   PlayerMoving: 0
   Cleared: 0
-  heroDuplicateActive: 0
-  villainDuplicateActive: 0
-  skeletonActive: 0
-  cyclopeActive: 0
-  cyclope2Active: 0
-  SkeletonMoving: 0
-  CyclopeMoving: 0
-  Cyclope2Moving: 0
   clearScreenUI: {fileID: 1124315586}
   TurnCount: 0
 --- !u!4 &63437731
@@ -1038,6 +1031,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 2025006582}
+  initTile: {fileID: 11400000, guid: e97f3d70603ae314a9ab77b2d4b87ff2, type: 2}
+  newTile: {fileID: 11400000, guid: 82bc297866b0c4845bfda91fefc7f161, type: 2}
 --- !u!1 &318321151
 GameObject:
   m_ObjectHideFlags: 0

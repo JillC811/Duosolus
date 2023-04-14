@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections; 
+using UnityEngine.UI;
 
 public interface InterfaceUndo
 {
@@ -29,23 +30,24 @@ public class GameStateManager : MonoBehaviour
     public List<GameObject> MonsterList = new List<GameObject>();
 
     public bool EventOccurance = false;
+    public int SwappedTurn = -1;
     public bool GameIsPaused = false;
     public bool PlayerMoving = false;
     public bool Cleared = false;
-    public bool heroDuplicateActive = false;
-    public bool villainDuplicateActive = false;
-    public bool skeletonActive = false;
-    public bool cyclopeActive = false;
-    public bool cyclope2Active = false;
 
     public Dictionary<GameObject, int> ObjectsInMotion = new Dictionary<GameObject, int>();
     
-    public int SkeletonMoving = 0;
-    public int CyclopeMoving = 0;
-    public int Cyclope2Moving = 0;
     public GameObject clearScreenUI;
 
     public int TurnCount = 0;
+
+    // Instruction Display
+    public static float timeOut = 20.0f; // Time in seconds before the image is displayed
+    private const string IMAGEPATH = "Images/undoInstruction"; // Name of the image to display (without the extension)
+
+    private Image image; // Reference to the Image component
+    private float timeElapsed = 0.0f; // Time elapsed since the last input
+    private GameObject imageObject;
 
     private void Awake()
     {
@@ -60,8 +62,45 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        // Instruction Display
+        Sprite sprite = Resources.Load<Sprite>(IMAGEPATH);
+        imageObject = new GameObject("Image");
+        //imageObject.transform.SetParent(transform);
+        RectTransform rectTransform = imageObject.AddComponent<RectTransform>();
+        imageObject.transform.localScale = new Vector3(0.34f, 0.34f, 1f);
+        imageObject.transform.position = new Vector3(0f,0.87f,0f);
+        image = imageObject.AddComponent<Image>();
+        image.sprite = sprite;
+        SpriteRenderer spriteRenderer = imageObject.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = sprite;
+        spriteRenderer.sortingOrder = 10;
+        spriteRenderer.sortingLayerName = "Instruction";
+        imageObject.SetActive(false);
+    }
+
     // Called per frame
     void Update() {
+        // Instruction Display
+        if (Input.anyKey)
+        {
+            timeElapsed = 0.0f;
+            imageObject.SetActive(false);
+        }
+        else
+        {
+            timeElapsed += Time.deltaTime;
+            if (timeElapsed >= timeOut)
+            {
+                imageObject.SetActive(true);
+                SpriteRenderer spriteRenderer = imageObject.GetComponent<SpriteRenderer>();
+                Color color = spriteRenderer.color;
+                color.a = Mathf.Max(0, Mathf.Min(1.0f, Mathf.Sin(timeElapsed) + 0.5f));
+                spriteRenderer.color = color;
+
+            }
+        }
 
         // Check if players moved, update PlayerMoving variable accordingly
         if (PlayerMoving && ObjectsInMotion.Count == 0) 
