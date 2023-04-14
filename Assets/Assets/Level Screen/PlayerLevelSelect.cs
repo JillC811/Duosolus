@@ -66,11 +66,13 @@ public class PlayerLevelSelect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("left") || Input.GetKeyDown("down"))
+        if (Input.GetKeyDown("left") || Input.GetKeyDown("down")
+            || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S))
         {
             if(index > 0) transform.position = coords[--index];
         }
-        else if (Input.GetKeyDown("right") || Input.GetKeyDown("up"))
+        else if (Input.GetKeyDown("right") || Input.GetKeyDown("up")
+                || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.W))
         {
             if(index + 1 < coords.Length && GlobalGameStateManager.Instance.clearedLevels[index])  transform.position = coords[++index];
         }

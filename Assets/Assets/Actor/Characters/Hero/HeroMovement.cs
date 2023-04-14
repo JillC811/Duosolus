@@ -65,6 +65,7 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
         // Check if instance is done moving
         if(transform.position == MovePoint.position && GameStateManager.Instance.ObjectsInMotion.ContainsKey(gameObject))
         {
+            Debug.Log("Cur Loc: " + transform.position);
             GameStateManager.Instance.ObjectsInMotion.Remove(gameObject);
 
             // Check if on top of oneway
@@ -100,7 +101,6 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 animator.SetBool("isDead", true);
                 GameStateManager.Instance.EventOccurance = true;
                 GameStateManager.Instance.ObjectsInMotion.Clear();
-                // GameStateManager.Instance.VillainMoving = 0;
                 
                 // SFX
                 AudioClip clip = Resources.Load<AudioClip>(HERO_DEATH_SFX_FILEPATH);
@@ -155,8 +155,10 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             }
 
             // Check if on top of a swap tile
-            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Swap")))
+            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Swap")) & GameStateManager.Instance.SwappedTurn != GameStateManager.Instance.TurnCount)
             {   
+                
+                GameStateManager.Instance.SwappedTurn = GameStateManager.Instance.TurnCount;
                 GameObject[] villains = GameObject.FindGameObjectsWithTag("Player");
                 float minDistance = Mathf.Infinity;
                 GameObject closestVillain = null;
@@ -168,7 +170,7 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                         continue;
                     }
 
-                    float distance = Vector3.Distance(villain.transform.position, currentPosition);
+                    float distance = Vector2.Distance(new Vector2(villain.transform.position.x, villain.transform.position.y), new Vector2(currentPosition.x, currentPosition.y));
                     if (distance < minDistance) {
                         minDistance = distance;
                         closestVillain = villain;
@@ -176,7 +178,6 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 }
 
                 if (closestVillain != null) {
-                    Debug.Log("Found Villain");
 
                     Vector3 HeroPosition = transform.position;
                     Vector3 HeroMovePoint = MovePoint.position;
@@ -191,10 +192,7 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                     audioSource.clip = clip;
                     audioSource.volume = 0.3f;
                     audioSource.Play();
-                }
-
-
-                
+                } else Debug.Log("ERROR: NO VILLAIN FOUND");
             }
 
             // Check if on top of a duplicator
@@ -202,9 +200,20 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             if(Physics2D.OverlapPoint(new Vector2(transform.position.x, transform.position.y), LayerMask.GetMask("Duplicator")))
             {
                 GameObject obj = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Duplicator")).gameObject;
+
+                bool collided = false;
                 // Bug - duplicator works even when there's already an object at the destination
-                // if (Physics2D.OverlapPoint(new Vector2(duplicationDestination.transform.position.x, duplicationDestination.transform.position.y), LayerMask.GetMask("Player_Hero", "Player_Villain")) == null) 
-                if(true)
+                GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+                foreach (GameObject player_ in players)
+                {
+                    if(Mathf.Abs(player_.transform.position.x - duplicationDestination.transform.position.x) < 0.01f && Mathf.Abs(player_.transform.position.y - duplicationDestination.transform.position.y)< 0.01f)
+                    {
+                        collided = true;
+                        break;
+                    }
+                }
+
+                if (!collided)
                 {
                     GameObject duplicate = Instantiate(gameObject);
                     duplicate.transform.position = duplicationDestination.transform.position;
@@ -215,6 +224,8 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                     HeroMovement hm = duplicate.GetComponent<HeroMovement>();
                     Transform ht = duplicateMP.GetComponent<Transform>();
                     hm.MovePoint = ht;
+
+                    Debug.Log("Spawn Loc: " + duplicationDestination.transform.position);
 
                     // obj.SetActive(false);
                     

@@ -42,7 +42,7 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
         {
             MovePoint.position = transform.position;
             animator.SetBool("isMoving", false);
-            return;
+            return; 
         }
 
         // Check if space is free, move on if so
@@ -143,6 +143,48 @@ public class VillainMovement : MonoBehaviour, InterfaceUndo
                 audioSource.clip = clip;
                 audioSource.volume = 0.3f;
                 audioSource.Play();
+            }
+
+            // Check if on top of a swap tile
+            if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Swap")) & GameStateManager.Instance.SwappedTurn != GameStateManager.Instance.TurnCount)
+            {   
+                GameStateManager.Instance.SwappedTurn = GameStateManager.Instance.TurnCount;
+
+                GameObject[] heroes = GameObject.FindGameObjectsWithTag("Player");
+                float minDistance = Mathf.Infinity;
+                GameObject closestHero = null;
+                Vector3 currentPosition = transform.position;
+
+                foreach (GameObject hero in heroes) {
+                    if(hero.gameObject.layer != LayerMask.NameToLayer("Player_Hero")) 
+                    {
+                        continue;
+                    }
+
+                    float distance = Vector2.Distance(new Vector2(hero.transform.position.x, hero.transform.position.y), new Vector2(currentPosition.x, currentPosition.y));
+                    Debug.Log(hero.transform.position);
+
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestHero = hero;
+                    }
+                }
+
+                if (closestHero != null) {
+                    Vector3 VPosition = transform.position;
+                    Vector3 VMovePoint = MovePoint.position;
+                    MovePoint.position = closestHero.GetComponent<HeroMovement>().MovePoint.position;
+                    closestHero.GetComponent<HeroMovement>().MovePoint.position = VMovePoint;
+                    transform.position = closestHero.transform.position;
+                    closestHero.transform.position = VPosition;
+                    
+                    // SFX
+                    AudioClip clip = Resources.Load<AudioClip>(SWAP_SFX_FILEPATH);
+                    AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+                    audioSource.clip = clip;
+                    audioSource.volume = 0.3f;
+                    audioSource.Play();
+                } else Debug.Log("ERROR: NO HERO FOUND");
             }
 
             // Check if on top of a duplicator
