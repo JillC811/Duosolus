@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SwitchObject: []
   SwitchTime: 
+  MonsterList: []
   EventOccurance: 0
   GameIsPaused: 0
   PlayerMoving: 0
@@ -166,7 +167,7 @@ MonoBehaviour:
   SkeletonMoving: 0
   CyclopeMoving: 0
   Cyclope2Moving: 0
-  clearScreenUI: {fileID: 731934928}
+  clearScreenUI: {fileID: 1124315586}
   TurnCount: 0
 --- !u!4 &9055400
 Transform:
