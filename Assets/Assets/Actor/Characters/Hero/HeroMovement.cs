@@ -157,12 +157,17 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
             // Check if on top of a swap tile
             if(Physics2D.OverlapPoint(new Vector3(transform.position.x, transform.position.y), LayerMask.GetMask("Swap")))
             {   
-                GameObject[] villains = GameObject.FindGameObjectsWithTag("Player_Villain");
+                GameObject[] villains = GameObject.FindGameObjectsWithTag("Player");
                 float minDistance = Mathf.Infinity;
                 GameObject closestVillain = null;
                 Vector3 currentPosition = transform.position;
 
                 foreach (GameObject villain in villains) {
+                    if(villain.gameObject.layer != LayerMask.NameToLayer("Player_Villain")) 
+                    {
+                        continue;
+                    }
+
                     float distance = Vector3.Distance(villain.transform.position, currentPosition);
                     if (distance < minDistance) {
                         minDistance = distance;
@@ -171,10 +176,12 @@ public class HeroMovement : MonoBehaviour, InterfaceUndo
                 }
 
                 if (closestVillain != null) {
+                    Debug.Log("Found Villain");
+
                     Vector3 HeroPosition = transform.position;
                     Vector3 HeroMovePoint = MovePoint.position;
-                    MovePoint.position = closestVillain.transform.position;
-                    closestVillain.transform.position = HeroMovePoint;
+                    MovePoint.position = closestVillain.GetComponent<VillainMovement>().MovePoint.position;
+                    closestVillain.GetComponent<VillainMovement>().MovePoint.position = HeroMovePoint;
                     transform.position = closestVillain.transform.position;
                     closestVillain.transform.position = HeroPosition;
                     

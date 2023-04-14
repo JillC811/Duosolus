@@ -423,16 +423,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SwitchObject: []
   SwitchTime: 
+  MonsterList: []
   EventOccurance: 0
   GameIsPaused: 0
   PlayerMoving: 0
   Cleared: 0
   heroDuplicateActive: 0
   villainDuplicateActive: 0
-  HeroMoving: 0
-  VillainMoving: 0
-  HeroCloneMoving: 0
-  VillainCloneMoving: 0
+  skeletonActive: 0
+  cyclopeActive: 0
+  cyclope2Active: 0
+  SkeletonMoving: 0
+  CyclopeMoving: 0
+  Cyclope2Moving: 0
   clearScreenUI: {fileID: 1124315586}
   TurnCount: 0
 --- !u!4 &63437731
@@ -667,7 +670,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 389944716, guid: 9a18b6c9e510c91498a50a90f71c59b5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1189,7 +1192,6 @@ MonoBehaviour:
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
-  duplicate: {fileID: 0}
   animator: {fileID: 0}
 --- !u!50 &318321155
 Rigidbody2D:
@@ -8395,14 +8397,9 @@ MonoBehaviour:
     m_Bits: 0
   changeTileScript: {fileID: 299270322}
   deadScreenUI: {fileID: 2083454558}
-  villain: {fileID: 0}
-  villainMovePoint: {fileID: 0}
-  vclone: {fileID: 0}
-  vcloneMovePoint: {fileID: 0}
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
-  duplicate: {fileID: 0}
   animator: {fileID: 2100117391}
 --- !u!50 &2100117388
 Rigidbody2D:

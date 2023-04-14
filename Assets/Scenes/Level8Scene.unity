@@ -356,6 +356,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SwitchObject: []
   SwitchTime: 
+  MonsterList: []
   EventOccurance: 0
   GameIsPaused: 0
   PlayerMoving: 0
@@ -365,10 +366,6 @@ MonoBehaviour:
   skeletonActive: 0
   cyclopeActive: 0
   cyclope2Active: 0
-  HeroMoving: 0
-  VillainMoving: 0
-  HeroCloneMoving: 0
-  VillainCloneMoving: 0
   SkeletonMoving: 0
   CyclopeMoving: 0
   Cyclope2Moving: 0
@@ -1077,7 +1074,6 @@ MonoBehaviour:
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
-  duplicate: {fileID: 0}
   animator: {fileID: 0}
 --- !u!50 &318321155
 Rigidbody2D:
@@ -8718,14 +8714,9 @@ MonoBehaviour:
     m_Bits: 256
   changeTileScript: {fileID: 299270322}
   deadScreenUI: {fileID: 2083454558}
-  villain: {fileID: 318321151}
-  villainMovePoint: {fileID: 276437629}
-  vclone: {fileID: 0}
-  vcloneMovePoint: {fileID: 0}
   orangeTile: {fileID: 0}
   blueTile: {fileID: 0}
   duplicationDestination: {fileID: 0}
-  duplicate: {fileID: 0}
   animator: {fileID: 2100117391}
 --- !u!50 &2100117388
 Rigidbody2D:
